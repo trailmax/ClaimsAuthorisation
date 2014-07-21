@@ -1,0 +1,17 @@
+﻿@model ClaimsAuth.Controllers.CreateRoleViewModel
+@{
+    ViewBag.Title = "Create Role";
+}
+
+<h2>Create Role</h2>
+
+
+@using (Html.BeginForm())
+{
+    <div class="form-group">
+        @Html.LabelFor(m => m.Name)
+        @Html.TextBoxFor(m => m.Name, new { @class = "form-control" })
+    </div>
+
+    <input type="submit" value="Create" class="btn btn-primary" />
+}

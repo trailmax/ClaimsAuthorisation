@@ -1,0 +1,16 @@
+﻿@model ClaimsAuth.Controllers.ClaimsIndexViewModel
+
+@{
+    ViewBag.Title = "List of Claims";
+}
+
+<h2>List of Claims</h2>
+
+<table class="table table-striped">
+    @foreach (var claim in Model.Claims)
+    {
+        <tr>
+            <td>@claim</td>
+        </tr>
+    }
+</table>

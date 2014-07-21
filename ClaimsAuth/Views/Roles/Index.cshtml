@@ -1,0 +1,27 @@
+﻿@model List<ClaimsAuth.Models.ApplicationRole>
+
+@{
+    ViewBag.Title = "All Roles";
+}
+
+<h2>Roles</h2>
+
+@Html.ActionLink("Create New Role", "Create", null, new { @class = "btn btn-primary" })
+
+<br /><br />
+
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th></th>
+            <th>Role Name</th>
+        </tr>
+    </thead>
+    @foreach (var role in Model)
+    {
+        <tr>
+            <th>@Html.ActionLink("Edit", "Edit", new { id = role.Id })</th>
+            <td>@role.Name</td>
+        </tr>
+    }
+</table>

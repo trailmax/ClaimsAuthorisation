@@ -1,0 +1,19 @@
+﻿@using ClaimsAuth.Infrastructure.Helpers
+@model ClaimsAuth.Controllers.UserClaimsViewModel
+
+@{
+    ViewBag.Title = "Update User Claims";
+}
+
+<h2>Update User Claims</h2>
+
+<p>Username: @Model.Username</p>
+
+@using (Html.BeginForm())
+{
+    @Html.HiddenFor(m => m.UserId)
+    @Html.CheckBoxListFor(m => m.SelectedClaims, Model.UserClaims)
+
+    
+    <input type="submit" value="Update"/>
+}

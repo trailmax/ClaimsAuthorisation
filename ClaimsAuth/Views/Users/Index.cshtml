@@ -1,0 +1,25 @@
+﻿@model ClaimsAuth.Controllers.UsersIndexViewIndex
+
+@{
+    ViewBag.Title = "List of users";
+}
+
+<h2>List of users</h2>
+
+
+<table class="table">
+    <thead>
+        <tr>
+            <td>UserName</td>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var user in Model.Users)
+        {
+            <tr>
+                <td>@Html.ActionLink("Edit Claims", "EditClaims", new { id = user.Id})</td>
+                <td>@user.UserName</td>
+            </tr>
+        }
+    </tbody>
+</table>
