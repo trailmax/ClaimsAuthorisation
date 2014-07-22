@@ -10,9 +10,11 @@ namespace ClaimsAuth.Infrastructure.Identity
     public class RoleClaim
     {
         [Key]
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public String Id { get; set; }
 
         public String RoleId { get; set; }
+
         [ForeignKey("RoleId")]
         public IdentityRole IdentityRole { get; set; }
 

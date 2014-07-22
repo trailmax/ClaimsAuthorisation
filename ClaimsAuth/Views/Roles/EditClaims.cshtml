@@ -1,0 +1,18 @@
+﻿@using ClaimsAuth.Infrastructure.Helpers
+@model ClaimsAuth.Controllers.RoleClaimsViewModel
+
+@{
+    ViewBag.Title = "Edit Role Claims";
+}
+
+<h2>Update Role Claims</h2>
+
+<p>Role: <strong>@Model.RoleName</strong></p>
+
+@using (Html.BeginForm())
+{
+    @Html.HiddenFor(m => m.RoleId)
+    @Html.CheckBoxListFor(m => m.SelectedClaims, Model.RoleClaims)
+    
+    <input type="submit" value="Update"/>
+}

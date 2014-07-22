@@ -20,7 +20,7 @@
     @foreach (var role in Model)
     {
         <tr>
-            <th>@Html.ActionLink("Edit", "Edit", new { id = role.Id })</th>
+            <th>@Html.ActionLink("Edit", "EditClaims", new { id = role.Id })</th>
             <td>@role.Name</td>
         </tr>
     }
