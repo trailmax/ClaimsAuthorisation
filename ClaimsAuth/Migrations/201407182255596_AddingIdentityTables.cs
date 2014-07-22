@@ -11,17 +11,14 @@ namespace ClaimsAuth.Migrations
                 "dbo.AspNetRoleClaims",
                 c => new
                     {
-                        Id = c.String(nullable: false, maxLength: 128),
+                        Id = c.Guid(nullable: false, identity: true),
                         RoleId = c.String(maxLength: 128),
                         ClaimType = c.String(),
                         ClaimValue = c.String(),
-                        ApplicationRole_Id = c.String(maxLength: 128),
                     })
                 .PrimaryKey(t => t.Id)
-                .ForeignKey("dbo.AspNetRoles", t => t.ApplicationRole_Id)
                 .ForeignKey("dbo.AspNetRoles", t => t.RoleId)
-                .Index(t => t.RoleId)
-                .Index(t => t.ApplicationRole_Id);
+                .Index(t => t.RoleId);
             
             CreateTable(
                 "dbo.AspNetRoles",
@@ -99,16 +96,14 @@ namespace ClaimsAuth.Migrations
             DropForeignKey("dbo.AspNetUserRoles", "UserId", "dbo.AspNetUsers");
             DropForeignKey("dbo.AspNetUserLogins", "UserId", "dbo.AspNetUsers");
             DropForeignKey("dbo.AspNetUserClaims", "UserId", "dbo.AspNetUsers");
-            DropForeignKey("dbo.AspNetRoleClaims", "RoleId", "dbo.AspNetRoles");
-            DropForeignKey("dbo.AspNetRoleClaims", "ApplicationRole_Id", "dbo.AspNetRoles");
             DropForeignKey("dbo.AspNetUserRoles", "RoleId", "dbo.AspNetRoles");
+            DropForeignKey("dbo.AspNetRoleClaims", "RoleId", "dbo.AspNetRoles");
             DropIndex("dbo.AspNetUserLogins", new[] { "UserId" });
             DropIndex("dbo.AspNetUserClaims", new[] { "UserId" });
             DropIndex("dbo.AspNetUsers", "UserNameIndex");
             DropIndex("dbo.AspNetUserRoles", new[] { "RoleId" });
             DropIndex("dbo.AspNetUserRoles", new[] { "UserId" });
             DropIndex("dbo.AspNetRoles", "RoleNameIndex");
-            DropIndex("dbo.AspNetRoleClaims", new[] { "ApplicationRole_Id" });
             DropIndex("dbo.AspNetRoleClaims", new[] { "RoleId" });
             DropTable("dbo.AspNetUserLogins");
             DropTable("dbo.AspNetUserClaims");

@@ -75,7 +75,7 @@ namespace ClaimsAuth.Controllers
 
             foreach (var submittedClaim in submittedClaims)
             {
-                var hasClaim = userClaims.Contains(new Claim(submittedClaim, submittedClaim));
+                var hasClaim = userClaims.Any(c => c.Value == submittedClaim && c.Type == submittedClaim);
                 if (!hasClaim)
                 {
                     await userManager.AddClaimAsync(user.Id, new Claim(submittedClaim, submittedClaim));

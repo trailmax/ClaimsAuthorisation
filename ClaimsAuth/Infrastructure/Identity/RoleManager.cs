@@ -47,15 +47,6 @@ namespace ClaimsAuth.Infrastructure.Identity
             };
 
             context.RoleClaims.Add(roleClaim);
-            try
-            {
-                context.SaveChanges();
-            }
-            catch (Exception e)
-            {
-                
-            }
-
 
             await context.SaveChangesAsync();
         }

@@ -1,9 +1,8 @@
 ﻿using System.Collections.Generic;
-using ClaimsAuth.Infrastructure.Identity;
 using Microsoft.AspNet.Identity.EntityFramework;
 
 
-namespace ClaimsAuth.Models
+namespace ClaimsAuth.Infrastructure.Identity
 {
     public class ApplicationRole : IdentityRole
     {

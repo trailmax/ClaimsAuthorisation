@@ -11,12 +11,12 @@ namespace ClaimsAuth.Infrastructure.Identity
     {
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-        public String Id { get; set; }
+        public Guid Id { get; set; }
 
         public String RoleId { get; set; }
 
         [ForeignKey("RoleId")]
-        public IdentityRole IdentityRole { get; set; }
+        public ApplicationRole ApplicationRole { get; set; }
 
         public String ClaimType { get; set; }
         public String ClaimValue { get; set; }
