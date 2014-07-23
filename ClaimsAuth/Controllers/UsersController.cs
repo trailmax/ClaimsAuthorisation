@@ -112,7 +112,7 @@ namespace ClaimsAuth.Controllers
 
             var userRoles = allRoles.Select(r => new SelectListItem()
             {
-                Value = r.Id,
+                Value = r.Name,
                 Text = r.Name,
                 Selected = assignedRoles.Contains(r.Name),
             }).ToList();
@@ -136,7 +136,30 @@ namespace ClaimsAuth.Controllers
 
             var submittedRoles = viewModel.SelectedRoles;
 
-            //TODO
+            var shouldUpdateSecurityStamp = false;
+
+            foreach (var submittedRole in submittedRoles)
+            {
+                var hasRole = await userManager.IsInRoleAsync(user.Id, submittedRole);
+                if (!hasRole)
+                {
+                    shouldUpdateSecurityStamp = true;
+                    await userManager.AddToRoleAsync(user.Id, submittedRole);
+                }
+            }
+
+            foreach (var removedRole in possibleRoles.Select(r => r.Name).Except(submittedRoles))
+            {
+                shouldUpdateSecurityStamp = true;
+                await userManager.RemoveFromRoleAsync(user.Id, removedRole);
+            }
+
+            if (shouldUpdateSecurityStamp)
+            {
+                await userManager.UpdateSecurityStampAsync(user.Id);
+            }
+
+            return RedirectToAction("Index");
         }
     }
 
