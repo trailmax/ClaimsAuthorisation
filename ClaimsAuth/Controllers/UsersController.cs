@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data.Entity;
 using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
@@ -14,12 +15,14 @@ namespace ClaimsAuth.Controllers
     {
         private readonly UserManager userManager;
         private readonly ClaimedActionsProvider claimedActionsProvider;
+        private readonly RoleManager roleManager;
 
 
-        public UsersController(UserManager userManager, ClaimedActionsProvider claimedActionsProvider)
+        public UsersController(UserManager userManager, ClaimedActionsProvider claimedActionsProvider, RoleManager roleManager)
         {
             this.userManager = userManager;
             this.claimedActionsProvider = claimedActionsProvider;
+            this.roleManager = roleManager;
         }
 
 
@@ -98,6 +101,43 @@ namespace ClaimsAuth.Controllers
 
             return RedirectToAction("Index");
         }
+
+
+        public async Task<ActionResult> EditRoles(string userId)
+        {
+            var user = await userManager.FindByIdAsync(userId);
+            var assignedRoles = await userManager.GetRolesAsync(user.Id);
+
+            var allRoles = await roleManager.Roles.ToListAsync();
+
+            var userRoles = allRoles.Select(r => new SelectListItem()
+            {
+                Value = r.Id,
+                Text = r.Name,
+                Selected = assignedRoles.Contains(r.Name),
+            }).ToList();
+
+            var viewModel = new UserRolesViewModel
+                {
+                    Username = user.UserName,
+                    UserId = user.Id,
+                    UserRoles = userRoles,
+                };
+            return View(viewModel);
+        }
+
+
+        [HttpPost]
+        public async Task<ActionResult> EditRoles(UserRolesViewModel viewModel)
+        {
+            var user = await userManager.FindByIdAsync(viewModel.UserId);
+            var possibleRoles = await roleManager.Roles.ToListAsync();
+            var userRoles = await userManager.GetRolesAsync(user.Id);
+
+            var submittedRoles = viewModel.SelectedRoles;
+
+            //TODO
+        }
     }
 
 
@@ -119,5 +159,20 @@ namespace ClaimsAuth.Controllers
         public String Username { get; set; }
         public List<SelectListItem> UserClaims { get; set; }
         public IEnumerable<String> SelectedClaims { get; set; }
+    }
+
+
+    public class UserRolesViewModel
+    {
+        public UserRolesViewModel()
+        {
+            UserRoles = new List<SelectListItem>();
+            SelectedRoles = new List<String>();
+        }
+
+        public String UserId { get; set; }
+        public String Username { get; set; }
+        public List<SelectListItem> UserRoles { get; set; }
+        public List<String> SelectedRoles { get; set; }
     }
 }

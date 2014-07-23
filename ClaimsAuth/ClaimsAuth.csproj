@@ -282,6 +282,7 @@
     <Content Include="Views\Users\EditClaims.cshtml" />
     <Content Include="Views\Secret\EditMagicBeans.cshtml" />
     <Content Include="Views\Errors\Unauthorised.cshtml" />
+    <Content Include="Views\Users\EditRoles.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
