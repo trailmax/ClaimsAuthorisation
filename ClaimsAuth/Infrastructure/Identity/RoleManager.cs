@@ -23,10 +23,10 @@ namespace ClaimsAuth.Infrastructure.Identity
         }
 
 
-        public async Task<List<Claim>> GetClaimsAsync(string roleId)
+        public async Task<List<Claim>> GetClaimsAsync(string roleName)
         {
             var roleClaims = await context.RoleClaims
-                .Where(rc => rc.RoleId == roleId)
+                .Where(rc => rc.Role.Name == roleName)
                 .ToListAsync();
 
             var claims = roleClaims

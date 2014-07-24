@@ -90,7 +90,9 @@ namespace ClaimsAuth.Infrastructure.Identity
             var userRoles = await userManager.GetRolesAsync(user.Id);
             foreach (var role in userRoles)
             {
-                var roleClaims = roleManager.GetClaimsAsync(role);
+                var roleClaims = await roleManager.GetClaimsAsync(role);
+
+                claimsIdentity.AddClaims(roleClaims);
             }
 
             return claimsIdentity;

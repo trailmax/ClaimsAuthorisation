@@ -15,7 +15,7 @@ namespace ClaimsAuth.Infrastructure.Identity
         public String RoleId { get; set; }
 
         [ForeignKey("RoleId")]
-        public ApplicationRole ApplicationRole { get; set; }
+        public ApplicationRole Role { get; set; }
 
         public String ClaimType { get; set; }
         public String ClaimValue { get; set; }

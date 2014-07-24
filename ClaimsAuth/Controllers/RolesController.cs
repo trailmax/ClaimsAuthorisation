@@ -56,7 +56,7 @@ namespace ClaimsAuth.Controllers
 
             var possibleClaims = claimedActionsProvider.GetControlledClaims();
 
-            var assignedClaims = await roleManager.GetClaimsAsync(role.Id);
+            var assignedClaims = await roleManager.GetClaimsAsync(role.Name);
 
 
             var roleClaims = possibleClaims.Select(pc => new SelectListItem()
@@ -85,7 +85,7 @@ namespace ClaimsAuth.Controllers
 
             var possibleClaims = claimedActionsProvider.GetControlledClaims();
 
-            var roleClaims = await roleManager.GetClaimsAsync(role.Id);
+            var roleClaims = await roleManager.GetClaimsAsync(role.Name);
 
             var submittedClaims = viewModel.SelectedClaims.ToList();
 
@@ -103,7 +103,7 @@ namespace ClaimsAuth.Controllers
                 await roleManager.RemoveClaimAsync(role.Id, new Claim(removedClaim, removedClaim));
             }
 
-            roleClaims = await roleManager.GetClaimsAsync(role.Id);
+            roleClaims = await roleManager.GetClaimsAsync(role.Name);
 
             return RedirectToAction("Index");
         }
