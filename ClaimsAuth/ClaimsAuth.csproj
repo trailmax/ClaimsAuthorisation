@@ -180,6 +180,7 @@
     <Compile Include="Controllers\ClaimsController.cs" />
     <Compile Include="Controllers\UsersController.cs" />
     <Compile Include="Infrastructure\Helpers\HtmlHelpers.cs" />
+    <Compile Include="Infrastructure\Identity\ClaimsGroupAttribute.cs" />
     <Compile Include="Infrastructure\Identity\UserManager.cs" />
     <Compile Include="App_Start\AutofacConfig.cs" />
     <Compile Include="App_Start\BundleConfig.cs" />
