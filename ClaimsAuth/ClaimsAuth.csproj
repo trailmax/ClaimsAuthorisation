@@ -172,6 +172,9 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="App_Start\SimpleInjector.cs" />
+    <Compile Include="Areas\Product\Controllers\ProductController.cs" />
+    <Compile Include="Areas\Product\Controllers\ProductTypeController.cs" />
+    <Compile Include="Areas\Product\ProductAreaRegistration.cs" />
     <Compile Include="Controllers\ErrorsController.cs" />
     <Compile Include="Controllers\SecretController.cs" />
     <Compile Include="Controllers\ClaimsController.cs" />
@@ -228,6 +231,14 @@
     <Content Include="fonts\glyphicons-halflings-regular.eot" />
     <Content Include="Content\bootstrap-theme.css.map" />
     <Content Include="Content\bootstrap.css.map" />
+    <Content Include="Areas\Product\Views\web.config" />
+    <Content Include="Areas\Product\Views\ProductType\Index.cshtml" />
+    <Content Include="Areas\Product\Views\ProductType\Edit.cshtml" />
+    <Content Include="Areas\Product\Views\ProductType\Create.cshtml" />
+    <Content Include="Areas\Product\Views\_ViewStart.cshtml" />
+    <Content Include="Areas\Product\Views\Product\Create.cshtml" />
+    <Content Include="Areas\Product\Views\Product\Edit.cshtml" />
+    <Content Include="Areas\Product\Views\Product\Index.cshtml" />
     <None Include="Scripts\jquery-2.1.1.intellisense.js" />
     <Content Include="Scripts\bootstrap.js" />
     <Content Include="Scripts\bootstrap.min.js" />
@@ -286,6 +297,8 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
+    <Folder Include="Areas\Product\Models\" />
+    <Folder Include="Areas\Product\Views\Shared\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="packages.config">

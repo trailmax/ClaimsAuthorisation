@@ -1,0 +1,31 @@
+﻿@{
+    ViewBag.Title = "";
+}
+
+<h2>List of products</h2>
+
+@Html.ActionLink("Create", "Create", null, new { @class = "btn btn-primary" })
+
+@*table>tr*10>td>a[href=#]{Id: $$}+^td{Product Name: $$$$$}*@
+<table class="table table-bordered">
+    <tr>
+        <td>@Html.ActionLink("Edit Id: 1", "Edit", new { id = 1 })</td>
+        <td>Product Name: 00001</td>
+    </tr>
+    <tr>
+        <td>@Html.ActionLink("Edit Id: 2", "Edit", new { id = 2 })</td>
+        <td>Product Name: 00002</td>
+    </tr>
+    <tr>
+        <td>@Html.ActionLink("Edit Id: 3", "Edit", new { id = 3 })</td>
+        <td>Product Name: 00003</td>
+    </tr>
+    <tr>
+        <td>@Html.ActionLink("Edit Id: 4", "Edit", new { id = 4 })</td>
+        <td>Product Name: 00004</td>
+    </tr>
+    <tr>
+        <td>@Html.ActionLink("Edit Id: 5", "Edit", new { id = 5 })</td>
+        <td>Product Name: 00005</td>
+    </tr>
+</table>

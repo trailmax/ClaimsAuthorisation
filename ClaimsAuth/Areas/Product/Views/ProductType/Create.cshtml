@@ -1,0 +1,26 @@
+﻿@{
+    ViewBag.Title = "Haar";
+}
+
+<h2>Create Product Type</h2>
+
+@if (ViewBag.Id == null)
+{
+    using (Html.BeginForm())
+    {
+        <div class="input-group">
+            @Html.Label("Id", "Enter type name")
+            @Html.TextBox("Id")
+        </div>
+    
+        <div class="input-group">
+            <input type="submit" value="Create" />
+        </div>
+    }
+}
+else
+{
+    <div class="jumbotron">@ViewBag.Id</div>
+}
+
+@Html.ActionLink("Index", "Index")
