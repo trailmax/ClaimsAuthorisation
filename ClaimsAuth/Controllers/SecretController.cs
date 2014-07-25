@@ -4,23 +4,25 @@ using ClaimsAuth.Infrastructure.Identity;
 
 namespace ClaimsAuth.Controllers
 {
+    [ClaimsGroup("Top Secrets")]
     public class SecretController : Controller
     {
-        [ClaimsAuthorize("Basic Index")]
+        [ClaimsAction(ClaimsActions.Index)]
         public ActionResult Index()
         {
             return View();
         }
 
 
-        [ClaimsAuthorize("Creating Something")]
+        [ClaimsAction(ClaimsActions.Create)]
+        [ClaimsAction(ClaimsActions.Index)]
         public ActionResult CreateSomething()
         {
             return View();
         }
 
 
-        [ClaimsAuthorize("Edit Magic Beans")]
+        [ClaimsAction(ClaimsActions.Delete)]
         public ActionResult EditMagicBeans()
         {
             return View();

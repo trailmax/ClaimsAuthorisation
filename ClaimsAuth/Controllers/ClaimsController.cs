@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
+﻿using System.Collections.Generic;
 using System.Web.Mvc;
 using ClaimsAuth.Infrastructure.Identity;
 
@@ -33,6 +30,6 @@ namespace ClaimsAuth.Controllers
 
     public class ClaimsIndexViewModel
     {
-        public List<String> Claims { get; set; }
+        public List<ClaimsGroup> Claims { get; set; }
     }
 }

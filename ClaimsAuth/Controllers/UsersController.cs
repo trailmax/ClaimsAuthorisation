@@ -36,71 +36,71 @@ namespace ClaimsAuth.Controllers
             return View(viewModel);
         }
 
+        //TODO FIX
+        //public async Task<ActionResult> EditClaims(String id)
+        //{
+        //    var user = await userManager.FindByIdAsync(id);
 
-        public async Task<ActionResult> EditClaims(String id)
-        {
-            var user = await userManager.FindByIdAsync(id);
+        //    var possibleClaims = claimedActionsProvider.GetControlledClaims();
 
-            var possibleClaims = claimedActionsProvider.GetControlledClaims();
+        //    var assignedClaims = await userManager.GetClaimsAsync(user.Id);
 
-            var assignedClaims = await userManager.GetClaimsAsync(user.Id);
+        //    var userClaims = possibleClaims.Select(pc => new SelectListItem()
+        //    {
+        //        Value = pc,
+        //        Text = pc,
+        //        Selected = assignedClaims.Select(c => c.Type).Contains(pc),
+        //    }).ToList();
 
-            var userClaims = possibleClaims.Select(pc => new SelectListItem()
-            {
-                Value = pc,
-                Text = pc,
-                Selected = assignedClaims.Select(c => c.Type).Contains(pc),
-            }).ToList();
+        //    var viewModel = new UserClaimsViewModel()
+        //    {
+        //        Username = user.UserName,
+        //        UserId = user.Id,
+        //        UserClaims = userClaims,
+        //    };
 
-            var viewModel = new UserClaimsViewModel()
-            {
-                Username = user.UserName,
-                UserId = user.Id,
-                UserClaims = userClaims,
-            };
-
-            return View(viewModel);
-        }
+        //    return View(viewModel);
+        //}
 
 
-        [HttpPost]
-        public async Task<ActionResult> EditClaims(UserClaimsViewModel viewModel)
-        {
-            var user = await userManager.FindByIdAsync(viewModel.UserId);
+        //[HttpPost]
+        //public async Task<ActionResult> EditClaims(UserClaimsViewModel viewModel)
+        //{
+        //    var user = await userManager.FindByIdAsync(viewModel.UserId);
 
-            var possibleClaims = claimedActionsProvider.GetControlledClaims();
+        //    var possibleClaims = claimedActionsProvider.GetControlledClaims();
 
-            var userClaims = await userManager.GetClaimsAsync(user.Id);
+        //    var userClaims = await userManager.GetClaimsAsync(user.Id);
 
-            var submittedClaims = viewModel.SelectedClaims.ToList();
+        //    var submittedClaims = viewModel.SelectedClaims.ToList();
 
-            var shouldUpdateSecurityStamp = false;
+        //    var shouldUpdateSecurityStamp = false;
 
-            foreach (var submittedClaim in submittedClaims)
-            {
-                var hasClaim = userClaims.Any(c => c.Value == submittedClaim && c.Type == submittedClaim);
-                if (!hasClaim)
-                {
-                    await userManager.AddClaimAsync(user.Id, new Claim(submittedClaim, submittedClaim));
-                    shouldUpdateSecurityStamp = true;
-                }
-            }
+        //    foreach (var submittedClaim in submittedClaims)
+        //    {
+        //        var hasClaim = userClaims.Any(c => c.Value == submittedClaim && c.Type == submittedClaim);
+        //        if (!hasClaim)
+        //        {
+        //            await userManager.AddClaimAsync(user.Id, new Claim(submittedClaim, submittedClaim));
+        //            shouldUpdateSecurityStamp = true;
+        //        }
+        //    }
 
-            foreach (var removedClaim in possibleClaims.Except(submittedClaims))
-            {
-                await userManager.RemoveClaimAsync(user.Id, new Claim(removedClaim, removedClaim));
-                shouldUpdateSecurityStamp = true;
-            }
+        //    foreach (var removedClaim in possibleClaims.Except(submittedClaims))
+        //    {
+        //        await userManager.RemoveClaimAsync(user.Id, new Claim(removedClaim, removedClaim));
+        //        shouldUpdateSecurityStamp = true;
+        //    }
 
-            if (shouldUpdateSecurityStamp)
-            {
-                await userManager.UpdateSecurityStampAsync(user.Id);
-            }
+        //    if (shouldUpdateSecurityStamp)
+        //    {
+        //        await userManager.UpdateSecurityStampAsync(user.Id);
+        //    }
 
-            userClaims = await userManager.GetClaimsAsync(user.Id);
+        //    userClaims = await userManager.GetClaimsAsync(user.Id);
 
-            return RedirectToAction("Index");
-        }
+        //    return RedirectToAction("Index");
+        //}
 
 
         public async Task<ActionResult> EditRoles(string userId)

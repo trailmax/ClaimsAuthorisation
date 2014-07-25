@@ -6,11 +6,13 @@
 
 <h2>List of Claims</h2>
 
-<table class="table table-striped">
-    @foreach (var claim in Model.Claims)
-    {
-        <tr>
-            <td>@claim</td>
-        </tr>
-    }
-</table>
+@foreach (var claim in Model.Claims)
+{
+    <h2>@claim.GroupName (@claim.GroupId)</h2>
+    <ul class="">
+        @foreach (var actionClaim in @claim.Claims)
+        {
+            <li>@actionClaim</li>
+        }
+    </ul>
+}

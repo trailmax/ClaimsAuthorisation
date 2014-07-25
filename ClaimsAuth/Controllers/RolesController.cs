@@ -6,7 +6,6 @@ using System.Security.Claims;
 using System.Threading.Tasks;
 using System.Web.Mvc;
 using ClaimsAuth.Infrastructure.Identity;
-using ClaimsAuth.Models;
 
 
 namespace ClaimsAuth.Controllers
@@ -49,64 +48,64 @@ namespace ClaimsAuth.Controllers
             return RedirectToAction("Index");
         }
 
+        //TODO FIX
+        //public async Task<ActionResult> EditClaims(string id)
+        //{
+        //    var role = await roleManager.FindByIdAsync(id);
 
-        public async Task<ActionResult> EditClaims(string id)
-        {
-            var role = await roleManager.FindByIdAsync(id);
+        //    var possibleClaims = claimedActionsProvider.GetControlledClaims();
 
-            var possibleClaims = claimedActionsProvider.GetControlledClaims();
-
-            var assignedClaims = await roleManager.GetClaimsAsync(role.Name);
-
-
-            var roleClaims = possibleClaims.Select(pc => new SelectListItem()
-            {
-                Value = pc,
-                Text = pc,
-                Selected = assignedClaims.Select(c => c.Type).Contains(pc),
-            }).ToList();
+        //    var assignedClaims = await roleManager.GetClaimsAsync(role.Name);
 
 
-            var viewModel = new RoleClaimsViewModel()
-            {
-                RoleId = role.Id,
-                RoleName = role.Name,
-                RoleClaims = roleClaims,
-            };
-
-            return View(viewModel);
-        }
+        //    var roleClaims = possibleClaims.Select(pc => new SelectListItem()
+        //    {
+        //        Value = pc,
+        //        Text = pc,
+        //        Selected = assignedClaims.Select(c => c.Type).Contains(pc),
+        //    }).ToList();
 
 
-        [HttpPost]
-        public async Task<ActionResult> EditClaims(RoleClaimsViewModel viewModel)
-        {
-            var role = await roleManager.FindByIdAsync(viewModel.RoleId);
+        //    var viewModel = new RoleClaimsViewModel()
+        //    {
+        //        RoleId = role.Id,
+        //        RoleName = role.Name,
+        //        RoleClaims = roleClaims,
+        //    };
 
-            var possibleClaims = claimedActionsProvider.GetControlledClaims();
+        //    return View(viewModel);
+        //}
 
-            var roleClaims = await roleManager.GetClaimsAsync(role.Name);
 
-            var submittedClaims = viewModel.SelectedClaims.ToList();
+        //[HttpPost]
+        //public async Task<ActionResult> EditClaims(RoleClaimsViewModel viewModel)
+        //{
+        //    var role = await roleManager.FindByIdAsync(viewModel.RoleId);
 
-            foreach (var submittedClaim in submittedClaims)
-            {
-                var hasClaim = roleClaims.Any(c => c.Value == submittedClaim && c.Type == submittedClaim);
-                if (!hasClaim)
-                {
-                    await roleManager.AddClaimAsync(role.Id, new Claim(submittedClaim, submittedClaim));
-                }
-            }
+        //    var possibleClaims = claimedActionsProvider.GetControlledClaims();
 
-            foreach (var removedClaim in possibleClaims.Except(submittedClaims))
-            {
-                await roleManager.RemoveClaimAsync(role.Id, new Claim(removedClaim, removedClaim));
-            }
+        //    var roleClaims = await roleManager.GetClaimsAsync(role.Name);
 
-            roleClaims = await roleManager.GetClaimsAsync(role.Name);
+        //    var submittedClaims = viewModel.SelectedClaims.ToList();
 
-            return RedirectToAction("Index");
-        }
+        //    foreach (var submittedClaim in submittedClaims)
+        //    {
+        //        var hasClaim = roleClaims.Any(c => c.Value == submittedClaim && c.Type == submittedClaim);
+        //        if (!hasClaim)
+        //        {
+        //            await roleManager.AddClaimAsync(role.Id, new Claim(submittedClaim, submittedClaim));
+        //        }
+        //    }
+
+        //    foreach (var removedClaim in possibleClaims.Except(submittedClaims))
+        //    {
+        //        await roleManager.RemoveClaimAsync(role.Id, new Claim(removedClaim, removedClaim));
+        //    }
+
+        //    roleClaims = await roleManager.GetClaimsAsync(role.Name);
+
+        //    return RedirectToAction("Index");
+        //}
     }
 
 
