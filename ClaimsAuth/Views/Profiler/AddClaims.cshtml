@@ -1,0 +1,13 @@
+﻿@model ClaimsAuth.Controllers.AddProfileClaimsViewModel
+
+@{
+    ViewBag.Title = "Add Claims To Profile User";
+}
+
+<h2>Add Claims To Profile User</h2>
+
+@using (Html.BeginForm())
+{
+    @Html.EditorForModel()
+    <input type="submit" class="btn btn-danger" value="Add Claims"/>
+}

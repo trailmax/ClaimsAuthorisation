@@ -176,6 +176,7 @@
     <Compile Include="Areas\Product\Controllers\ProductTypeController.cs" />
     <Compile Include="Areas\Product\ProductAreaRegistration.cs" />
     <Compile Include="Controllers\ErrorsController.cs" />
+    <Compile Include="Controllers\ProfilerController.cs" />
     <Compile Include="Controllers\SecretController.cs" />
     <Compile Include="Controllers\ClaimsController.cs" />
     <Compile Include="Controllers\UsersController.cs" />
@@ -295,6 +296,8 @@
     <Content Include="Views\Secret\EditMagicBeans.cshtml" />
     <Content Include="Views\Errors\Unauthorised.cshtml" />
     <Content Include="Views\Users\EditRoles.cshtml" />
+    <Content Include="Views\Profiler\Index.cshtml" />
+    <Content Include="Views\Profiler\AddClaims.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

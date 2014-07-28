@@ -1,0 +1,39 @@
+﻿@using System.Security.Claims
+@{
+    ViewBag.Title = "Profiler";
+}
+
+<h2>Profiler</h2>
+
+
+<h3>Your Cookies</h3>
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th>Cookie Name</th>
+            <th>Cookie Size</th>
+            <th >Value</th>
+        </tr>
+    </thead>
+    @for (var i = 0; i < HttpContext.Current.Request.Cookies.Count; i++)
+    {
+        
+        var cookie = HttpContext.Current.Request.Cookies[i];
+
+        <tr>
+            <td>@cookie.Name</td>
+            <td>@cookie.Value.Length</td>
+            <td style="width: 100px;">@(cookie.Value.Length > 50 ? cookie.Value.Substring(0, 50)+"..." : cookie.Value)</td>
+        </tr>
+    }
+</table>
+
+<h3>Your claims</h3>
+<ul>
+    @foreach (var claim in ClaimsPrincipal.Current.Claims)
+    {
+        <li>@claim.Type == @claim.Value</li>
+    }
+</ul>
+
+@Html.ActionLink("Add Profile Claims", "AddClaims")
