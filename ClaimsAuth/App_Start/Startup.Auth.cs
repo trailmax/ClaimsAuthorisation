@@ -31,7 +31,7 @@ namespace ClaimsAuth
                         validateInterval: TimeSpan.FromMinutes(0),
                         regenerateIdentity: (manager, user) => manager.GenerateUserIdentityAsync(user))
                 },
-                
+                CookieName = "jumpingjacks",
             });
             
             app.UseExternalSignInCookie(DefaultAuthenticationTypes.ExternalCookie);

@@ -220,6 +220,10 @@
     <Compile Include="Startup.cs" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="App_Data\aspnet-ClaimsAuth-20140718095404.mdf" />
+    <Content Include="App_Data\aspnet-ClaimsAuth-20140718095404_log.ldf">
+      <DependentUpon>aspnet-ClaimsAuth-20140718095404.mdf</DependentUpon>
+    </Content>
     <Content Include="Content\bootstrap-theme.css" />
     <Content Include="Content\bootstrap-theme.min.css" />
     <Content Include="Content\bootstrap.css" />
@@ -301,7 +305,6 @@
     <Content Include="Views\Profiler\AddRandomClaims.cshtml" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="App_Data\" />
     <Folder Include="Areas\Product\Models\" />
     <Folder Include="Areas\Product\Views\Shared\" />
   </ItemGroup>
