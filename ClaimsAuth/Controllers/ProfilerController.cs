@@ -99,6 +99,25 @@ namespace ClaimsAuth.Controllers
         }
 
 
+        [HttpPost]
+        public async Task<ActionResult> DeleteAllClaims()
+        {
+            var userId = ClaimsPrincipal.Current.Identity.GetUserId();
+            var user = await userManager.FindByIdAsync(userId);
+
+            var claims = await userManager.GetClaimsAsync(userId);
+
+            foreach (var claim in claims)
+            {
+                await userManager.RemoveClaimAsync(userId, claim);
+            }
+
+            await userManager.SignInAsync(AuthenticationManager, user, true);
+
+            return RedirectToAction("Index");
+        }
+
+
         private IAuthenticationManager AuthenticationManager
         {
             get

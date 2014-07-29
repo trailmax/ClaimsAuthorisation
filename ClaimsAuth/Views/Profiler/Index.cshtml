@@ -5,17 +5,32 @@
 
 <h2>Profiler</h2>
 
-@Html.ActionLink("Add Single Claims", "AddClaims")
-<br />
-@Html.ActionLink("Add Random Claims", "AddRandomClaims")
+<ul class="list-inline">
+    <li>
+        @Html.ActionLink("Add Single Claims", "AddClaims", null, new { @class = "btn btn-default" })
+    </li>
+    <li>
+        @Html.ActionLink("Add Random Claims", "AddRandomClaims", null, new { @class = "btn btn-default" })
+    </li>
+    <li>
+        @using (Html.BeginForm("DeleteAllClaims", "Profiler", routeValues: null, method: FormMethod.Post, htmlAttributes: new { @class = "form-inline" }))
+        {
+            <input type="submit" value="Delete All Claims" class="btn btn-danger" />
+        }
+    </li>
+</ul>
 
-<p>
-    App Cookie Length: @Model.AppCookieLength
-    <br />
-    All Claims Text Length: @Model.TotalClaimsLength
-    <br />
-    Cookie per claim: @Model.CookiePerClaims
-</p>
+
+
+<div class="jumbotron">
+    <p>
+        App Cookie Length: @Model.AppCookieLength
+        <br />
+        All Claims Text Length: @Model.TotalClaimsLength
+        <br />
+        Cookie per claim: @Model.CookiePerClaims
+    </p>
+</div>
 
 <h3>Your Cookies</h3>
 <table class="table table-striped">
@@ -23,18 +38,18 @@
         <tr>
             <th>Cookie Name</th>
             <th>Cookie Size</th>
-            <th >Value</th>
+            <th>Value</th>
         </tr>
     </thead>
     @for (var i = 0; i < Model.Cookies.Count; i++)
     {
-        
+
         var cookie = Model.Cookies[i];
 
         <tr>
             <td>@cookie.Name</td>
             <td>@cookie.Value.Length</td>
-            <td style="width: 100px;">@(cookie.Value.Length > 50 ? cookie.Value.Substring(0, 50)+"..." : cookie.Value)</td>
+            <td style="width: 100px;">@(cookie.Value.Length > 50 ? cookie.Value.Substring(0, 50) + "..." : cookie.Value)</td>
         </tr>
     }
 </table>
