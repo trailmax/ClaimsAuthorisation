@@ -298,6 +298,7 @@
     <Content Include="Views\Users\EditRoles.cshtml" />
     <Content Include="Views\Profiler\Index.cshtml" />
     <Content Include="Views\Profiler\AddClaims.cshtml" />
+    <Content Include="Views\Profiler\AddRandomClaims.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

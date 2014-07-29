@@ -1,10 +1,21 @@
-﻿@using System.Security.Claims
+﻿@model ClaimsAuth.Controllers.ProfilerIndexViewModel
 @{
     ViewBag.Title = "Profiler";
 }
 
 <h2>Profiler</h2>
 
+@Html.ActionLink("Add Single Claims", "AddClaims")
+<br />
+@Html.ActionLink("Add Random Claims", "AddRandomClaims")
+
+<p>
+    App Cookie Length: @Model.AppCookieLength
+    <br />
+    All Claims Text Length: @Model.TotalClaimsLength
+    <br />
+    Cookie per claim: @Model.CookiePerClaims
+</p>
 
 <h3>Your Cookies</h3>
 <table class="table table-striped">
@@ -15,10 +26,10 @@
             <th >Value</th>
         </tr>
     </thead>
-    @for (var i = 0; i < HttpContext.Current.Request.Cookies.Count; i++)
+    @for (var i = 0; i < Model.Cookies.Count; i++)
     {
         
-        var cookie = HttpContext.Current.Request.Cookies[i];
+        var cookie = Model.Cookies[i];
 
         <tr>
             <td>@cookie.Name</td>
@@ -30,10 +41,8 @@
 
 <h3>Your claims</h3>
 <ul>
-    @foreach (var claim in ClaimsPrincipal.Current.Claims)
+    @foreach (var claim in Model.Claims)
     {
         <li>@claim.Type == @claim.Value</li>
     }
 </ul>
-
-@Html.ActionLink("Add Profile Claims", "AddClaims")
