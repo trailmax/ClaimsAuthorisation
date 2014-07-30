@@ -32,6 +32,7 @@ namespace ClaimsAuth
                         regenerateIdentity: (manager, user) => manager.GenerateUserIdentityAsync(user))
                 },
                 CookieName = "jumpingjacks",
+                CookieHttpOnly = true,
             });
             
             app.UseExternalSignInCookie(DefaultAuthenticationTypes.ExternalCookie);

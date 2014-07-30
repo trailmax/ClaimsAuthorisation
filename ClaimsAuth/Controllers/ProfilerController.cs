@@ -33,7 +33,7 @@ namespace ClaimsAuth.Controllers
             var claimsTextLength = claims.Sum(c => c.Type.Length + c.Value.Length);
 
 
-            var appCookie = cookies[".AspNet.ApplicationCookie"] ?? new HttpCookie("No App Cookie!", "I said nothing!");
+            var appCookie = cookies["jumpingjacks"] ?? new HttpCookie("No App Cookie!", "I said nothing!");
 
             var appCookieLength = appCookie.Value.Length;
 

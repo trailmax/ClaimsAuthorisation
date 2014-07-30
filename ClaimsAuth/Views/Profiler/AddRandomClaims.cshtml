@@ -1,0 +1,13 @@
+﻿@model ClaimsAuth.Controllers.AddRandomClaims
+
+@{
+    ViewBag.Title = "Add Random Claims";
+}
+
+<h2>Add Random Claims</h2>
+
+@using (Html.BeginForm())
+{
+    @Html.EditorForModel()
+    <input type="submit" class="btn btn-danger" value="Add Claims" />
+}
