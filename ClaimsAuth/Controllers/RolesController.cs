@@ -48,6 +48,7 @@ namespace ClaimsAuth.Controllers
             return RedirectToAction("Index");
         }
 
+
         //TODO FIX
         //public async Task<ActionResult> EditClaims(string id)
         //{
@@ -57,21 +58,25 @@ namespace ClaimsAuth.Controllers
 
         //    var assignedClaims = await roleManager.GetClaimsAsync(role.Name);
 
-
-        //    var roleClaims = possibleClaims.Select(pc => new SelectListItem()
+        //    foreach (var possibleClaim in possibleClaims)
         //    {
-        //        Value = pc,
-        //        Text = pc,
-        //        Selected = assignedClaims.Select(c => c.Type).Contains(pc),
-        //    }).ToList();
+                
+        //    }
+
+        //    //var roleClaims = possibleClaims.Select(pc => new SelectListItem()
+        //    //{
+        //    //    Value = pc.GroupId.ToString(),
+        //    //    Text = ,
+        //    //    Selected = assignedClaims.Select(c => c.Type).Contains(pc),
+        //    //}).ToList();
 
 
-        //    var viewModel = new RoleClaimsViewModel()
-        //    {
-        //        RoleId = role.Id,
-        //        RoleName = role.Name,
-        //        RoleClaims = roleClaims,
-        //    };
+        //    //var viewModel = new RoleClaimsViewModel()
+        //    //{
+        //    //    RoleId = role.Id,
+        //    //    RoleName = role.Name,
+        //    //    RoleClaims = roleClaims,
+        //    //};
 
         //    return View(viewModel);
         //}

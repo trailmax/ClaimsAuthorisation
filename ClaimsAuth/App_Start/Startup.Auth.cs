@@ -41,14 +41,14 @@ namespace ClaimsAuth
                     .Select(c => c.Value)
                     .ToList();
 
-                foreach (var role in userRoles)
+                foreach (var roleName in userRoles)
                 {
-                    var cacheKey = ApplicationRole.CacheKey + role;
+                    var cacheKey = ApplicationRole.GetCacheKey(roleName);
                     var cachedClaims = System.Web.HttpContext.Current.Cache[cacheKey] as IEnumerable<Claim>;
                     if (cachedClaims == null)
                     {
                         var roleManager = DependencyResolver.Current.GetService<RoleManager>();
-                        cachedClaims = await roleManager.GetClaimsAsync(role);
+                        cachedClaims = await roleManager.GetClaimsAsync(roleName);
                         System.Web.HttpContext.Current.Cache[cacheKey] = cachedClaims;
                     }
                     context.Identity.AddClaims(cachedClaims);

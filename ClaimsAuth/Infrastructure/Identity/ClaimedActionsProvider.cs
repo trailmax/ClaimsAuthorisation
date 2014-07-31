@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using System.Web.Mvc;
+using ClaimsAuth.Infrastructure.Helpers;
 
 
 namespace ClaimsAuth.Infrastructure.Identity
@@ -11,23 +12,36 @@ namespace ClaimsAuth.Infrastructure.Identity
     {
         public List<ClaimsGroup> GetControlledClaims()
         {
-            //TODO FIX
-            throw new NotImplementedException();
-            //var claimedGroups = Assembly.GetAssembly(typeof(MvcApplication))
-            //    .GetTypes()
-            //    .Where(t => !t.IsAbstract && t.IsSubclassOf(typeof(Controller)))
-            //    .Where(t => t.Namespace != null && !t.Name.Contains("T4MVC"))
-            //    .Where(c => c.IsDefined(typeof(ClaimsGroupAttribute)))
-            //    .Select(c => new ClaimsGroup()
-            //    {
-            //        GroupName = c.GetCustomAttribute<ClaimsGroupAttribute>().Name,
-            //        GroupId = c.FullName,
-            //        ControllerType = c,
-            //        Claims = GetActionClaims(c),
-            //    })
-            //    .ToList();
+            var claimedGroups = Assembly.GetAssembly(typeof(MvcApplication))
+                .GetTypes()
+                .Where(t => !t.IsAbstract && t.IsSubclassOf(typeof(Controller)))
+                .Where(t => t.Namespace != null && !t.Name.Contains("T4MVC"))
+                .Where(c => c.IsDefined(typeof(ClaimsGroupAttribute)))
+                .Select(c => new ClaimsGroup()
+                {
+                    GroupName = GetGroupName(c),
+                    GroupId = GetGroupId(c),
+                    ControllerType = c,
+                    Claims = GetActionClaims(c),
+                })
+                .ToList();
 
-            //return claimedGroups;
+            return claimedGroups;
+        }
+
+
+        private String GetGroupName(Type controllerType)
+        {
+            var result = controllerType.GetCustomAttribute<ClaimsGroupAttribute>().Resource.GetDisplayName();
+            return result;
+        }
+
+
+        private int GetGroupId(Type controllerType)
+        {
+            var claimsGroupAttribute = controllerType.GetCustomAttribute<ClaimsGroupAttribute>();
+            var result = (int)claimsGroupAttribute.Resource;
+            return result;
         }
 
 
@@ -43,29 +57,8 @@ namespace ClaimsAuth.Infrastructure.Identity
                 
             return result;
         }
-
-        //public List<String> GetControlledClaims()
-        //{
-        //    var claimedActions = GetControllerTypes()
-        //        .SelectMany(ct => ct.GetMethods())
-        //        .Where(m => m.IsDefined(typeof(ClaimsAuthorizeAttribute)))
-        //        .Select(m => m.GetCustomAttribute<ClaimsAuthorizeAttribute>())
-        //        .Select(a => a.Name)
-        //        .ToList();
-
-        //    return claimedActions;
-        //}
-
-
-        public static IEnumerable<Type> GetControllerTypes()
-        {
-            return Assembly.GetAssembly(typeof(MvcApplication))
-                .GetTypes()
-                .Where(t => !t.IsAbstract && t.IsSubclassOf(typeof(Controller)))
-                .Where(t => t.Namespace != null && !t.Name.Contains("T4MVC"))
-                .ToList();
-        }
     }
+
 
     public class ClaimsGroup
     {
@@ -76,7 +69,7 @@ namespace ClaimsAuth.Infrastructure.Identity
 
         public String GroupName { get; set; }
 
-        public String GroupId { get; set; }
+        public int GroupId { get; set; }
 
         public Type ControllerType { get; set; }
 
