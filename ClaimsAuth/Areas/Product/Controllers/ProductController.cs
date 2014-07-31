@@ -5,7 +5,7 @@ using ClaimsAuth.Infrastructure.Identity;
 
 namespace ClaimsAuth.Areas.Product.Controllers
 {
-    [ClaimsGroup("Products")]
+    [ClaimsGroup(ClaimResources.Products)]
     public class ProductController : Controller
     {
         [ClaimsAction(ClaimsActions.Index)]

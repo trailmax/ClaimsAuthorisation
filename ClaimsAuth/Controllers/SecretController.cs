@@ -4,7 +4,7 @@ using ClaimsAuth.Infrastructure.Identity;
 
 namespace ClaimsAuth.Controllers
 {
-    [ClaimsGroup("Top Secrets")]
+    [ClaimsGroup(ClaimResources.Secrets)]
     public class SecretController : Controller
     {
         [ClaimsAction(ClaimsActions.Index)]

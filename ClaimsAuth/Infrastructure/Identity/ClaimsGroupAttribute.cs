@@ -1,4 +1,5 @@
 ﻿using System;
+using System.ComponentModel.DataAnnotations;
 
 
 namespace ClaimsAuth.Infrastructure.Identity
@@ -6,11 +7,11 @@ namespace ClaimsAuth.Infrastructure.Identity
     [AttributeUsage(AttributeTargets.Class, AllowMultiple = false)]
     public class ClaimsGroupAttribute : Attribute
     {
-        public String Name { get;  private set; }
+        public ClaimResources Resource { get; private set; }
 
-        public ClaimsGroupAttribute(String name)
+        public ClaimsGroupAttribute(ClaimResources resource)
         {
-            Name = name;
+            Resource = resource;
         }
     }
 
@@ -33,5 +34,17 @@ namespace ClaimsAuth.Infrastructure.Identity
         Create,
         Edit,
         Delete
+    }
+
+
+    public enum ClaimResources
+    {
+        [Display(Name = "Great Products")]
+        Products = 1,
+
+        [Display(Name = "Product Types")]
+        ProductType = 2,
+
+        Secrets = 3,
     }
 }

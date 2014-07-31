@@ -11,21 +11,23 @@ namespace ClaimsAuth.Infrastructure.Identity
     {
         public List<ClaimsGroup> GetControlledClaims()
         {
-            var claimedGroups = Assembly.GetAssembly(typeof(MvcApplication))
-                .GetTypes()
-                .Where(t => !t.IsAbstract && t.IsSubclassOf(typeof(Controller)))
-                .Where(t => t.Namespace != null && !t.Name.Contains("T4MVC"))
-                .Where(c => c.IsDefined(typeof(ClaimsGroupAttribute)))
-                .Select(c => new ClaimsGroup()
-                {
-                    GroupName = c.GetCustomAttribute<ClaimsGroupAttribute>().Name,
-                    GroupId = c.FullName,
-                    ControllerType = c,
-                    Claims = GetActionClaims(c),
-                })
-                .ToList();
+            //TODO FIX
+            throw new NotImplementedException();
+            //var claimedGroups = Assembly.GetAssembly(typeof(MvcApplication))
+            //    .GetTypes()
+            //    .Where(t => !t.IsAbstract && t.IsSubclassOf(typeof(Controller)))
+            //    .Where(t => t.Namespace != null && !t.Name.Contains("T4MVC"))
+            //    .Where(c => c.IsDefined(typeof(ClaimsGroupAttribute)))
+            //    .Select(c => new ClaimsGroup()
+            //    {
+            //        GroupName = c.GetCustomAttribute<ClaimsGroupAttribute>().Name,
+            //        GroupId = c.FullName,
+            //        ControllerType = c,
+            //        Claims = GetActionClaims(c),
+            //    })
+            //    .ToList();
 
-            return claimedGroups;
+            //return claimedGroups;
         }
 
 

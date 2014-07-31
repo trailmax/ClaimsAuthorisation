@@ -42,8 +42,6 @@ namespace ClaimsAuth.Infrastructure.Identity
             this.EmailService = new EmailService();
             this.SmsService = new SmsService();
             this.UserTokenProvider = new EmailTokenProvider<ApplicationUser>();
-
-            this.ClaimsIdentityFactory = new MyClaimsIdentityFactory(roleManager);
         }
 
 
@@ -72,30 +70,30 @@ namespace ClaimsAuth.Infrastructure.Identity
         }
     }
 
-    public class MyClaimsIdentityFactory : ClaimsIdentityFactory<ApplicationUser, string>
-    {
-        private readonly RoleManager roleManager;
+    //public class MyClaimsIdentityFactory : ClaimsIdentityFactory<ApplicationUser, string>
+    //{
+    //    private readonly RoleManager roleManager;
 
 
-        public MyClaimsIdentityFactory(RoleManager roleManager)
-        {
-            this.roleManager = roleManager;
-        }
+    //    public MyClaimsIdentityFactory(RoleManager roleManager)
+    //    {
+    //        this.roleManager = roleManager;
+    //    }
 
 
-        public override async Task<ClaimsIdentity> CreateAsync(UserManager<ApplicationUser, string> userManager, ApplicationUser user, string authenticationType)
-        {
-            var claimsIdentity = await base.CreateAsync(userManager, user, authenticationType);
+    //    public override async Task<ClaimsIdentity> CreateAsync(UserManager<ApplicationUser, string> userManager, ApplicationUser user, string authenticationType)
+    //    {
+    //        var claimsIdentity = await base.CreateAsync(userManager, user, authenticationType);
 
-            var userRoles = await userManager.GetRolesAsync(user.Id);
-            foreach (var role in userRoles)
-            {
-                var roleClaims = await roleManager.GetClaimsAsync(role);
+    //        var userRoles = await userManager.GetRolesAsync(user.Id);
+    //        foreach (var role in userRoles)
+    //        {
+    //            var roleClaims = await roleManager.GetClaimsAsync(role);
 
-                claimsIdentity.AddClaims(roleClaims);
-            }
+    //            claimsIdentity.AddClaims(roleClaims);
+    //        }
 
-            return claimsIdentity;
-        }
-    }
+    //        return claimsIdentity;
+    //    }
+    //}
 }

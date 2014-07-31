@@ -1,4 +1,8 @@
-﻿using ClaimsAuth.Infrastructure.Identity;
+﻿using System.Collections.Generic;
+using System.Linq;
+using System.Security.Claims;
+using System.Web.Mvc;
+using ClaimsAuth.Infrastructure.Identity;
 using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.Owin;
 using Microsoft.Owin;
@@ -7,6 +11,7 @@ using Owin;
 using System;
 using ClaimsAuth.Models;
 
+
 namespace ClaimsAuth
 {
     public partial class Startup
@@ -14,23 +19,47 @@ namespace ClaimsAuth
         // For more information on configuring authentication, please visit http://go.microsoft.com/fwlink/?LinkId=301864
         public void ConfigureAuth(IAppBuilder app)
         {
-            // Configure the db context and user manager to use a single instance per request
-            //app.CreatePerOwinContext(MyDbContext.Create);
-            //app.CreatePerOwinContext<UserManager>(UserManager.Create);
+            var cookieAuthenticationProvider = new CookieAuthenticationProvider();
+            cookieAuthenticationProvider.OnValidateIdentity = async context =>
+            {
+                SecurityStampValidator.OnValidateIdentity<UserManager, ApplicationUser>(
+                    TimeSpan.FromMinutes(0), (manager, user) => manager.GenerateUserIdentityAsync(user));
 
-            // Enable the application to use a cookie to store information for the signed in user
-            // and to use a cookie to temporarily store information about a user logging in with a third party login provider
-            // Configure the sign in cookie
+                //IOwinRequest request = context.Request;
+                //Trace.WriteLine(String.Format("Validating Identity: {0}", request.Path));
+
+                var userId = context.Identity.GetUserId();
+                if (userId == null)
+                {
+                    return;
+                }
+
+                // get list of roles on the user
+                var userRoles = context.Identity
+                    .Claims
+                    .Where(c => c.Type == ClaimTypes.Role)
+                    .Select(c => c.Value)
+                    .ToList();
+
+                foreach (var role in userRoles)
+                {
+                    var cacheKey = ApplicationRole.CacheKey + role;
+                    var cachedClaims = System.Web.HttpContext.Current.Cache[cacheKey] as IEnumerable<Claim>;
+                    if (cachedClaims == null)
+                    {
+                        var roleManager = DependencyResolver.Current.GetService<RoleManager>();
+                        cachedClaims = await roleManager.GetClaimsAsync(role);
+                        System.Web.HttpContext.Current.Cache[cacheKey] = cachedClaims;
+                    }
+                    context.Identity.AddClaims(cachedClaims);
+                }
+
+            };
             app.UseCookieAuthentication(new CookieAuthenticationOptions
             {
                 AuthenticationType = DefaultAuthenticationTypes.ApplicationCookie,
                 LoginPath = new PathString("/Account/Login"),
-                Provider = new CookieAuthenticationProvider
-                {
-                    OnValidateIdentity = SecurityStampValidator.OnValidateIdentity<UserManager, ApplicationUser>(
-                        validateInterval: TimeSpan.FromMinutes(0),
-                        regenerateIdentity: (manager, user) => manager.GenerateUserIdentityAsync(user))
-                },
+                Provider = cookieAuthenticationProvider,
                 CookieName = "jumpingjacks",
                 CookieHttpOnly = true,
             });
