@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using System.Linq;
 using System.Reflection;
 using System.Security.Claims;
 using System.Web;
@@ -19,24 +17,24 @@ namespace ClaimsAuth.Infrastructure.Identity
 
             if (controllerGroup == null)
             {
-                base.OnAuthorization(filterContext);
                 return;
             }
 
-            var actionClaim = filterContext.ActionDescriptor.GetCustomAttributes(typeof(ClaimsActionAttribute), true).FirstOrDefault();
+            var actionClaim = (ClaimsActionAttribute)filterContext.ActionDescriptor.GetCustomAttributes(typeof(ClaimsActionAttribute), true).FirstOrDefault();
 
             actionClaim = actionClaim ?? new ClaimsActionAttribute(ClaimsActions.Index);
 
-            if (user.HasClaim(controllerGroup.GetGroupId(), actionClaim.ToString()))
-            {
-                base.OnAuthorization(filterContext);
-            }
-            else
+            var groupId = controllerGroup.GetGroupId();
+            var claimValue = actionClaim .Claim.ToString();
+
+            var hasClaim = user.HasClaim(groupId, claimValue);
+            if (!hasClaim)
             {
                 filterContext.Result = new RedirectToRouteResult(new RouteValueDictionary()
                 {
-                    {"controller", "errors"},
-                    {"action", "Unauthorised"}
+                    { "controller", "errors" },
+                    { "action", "Unauthorised" },
+                    { "area", "" }
                 });
             }
         }
