@@ -174,6 +174,7 @@
     <Compile Include="Infrastructure\Helpers\EnumExtensions.cs" />
     <Compile Include="Infrastructure\Helpers\HtmlHelpers.cs" />
     <Compile Include="Infrastructure\Helpers\StringExtensions.cs" />
+    <Compile Include="Infrastructure\Identity\ClaimsAuthorisationFilter.cs" />
     <Compile Include="Infrastructure\Identity\ClaimsGroupAttribute.cs" />
     <Compile Include="Infrastructure\Identity\UserManager.cs" />
     <Compile Include="App_Start\AutofacConfig.cs" />

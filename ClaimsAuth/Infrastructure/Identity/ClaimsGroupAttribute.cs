@@ -13,6 +13,11 @@ namespace ClaimsAuth.Infrastructure.Identity
         {
             Resource = resource;
         }
+
+        public String GetGroupId()
+        {
+            return ((int)Resource).ToString();
+        }
     }
 
 

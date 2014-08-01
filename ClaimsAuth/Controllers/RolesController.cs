@@ -70,7 +70,8 @@ namespace ClaimsAuth.Controllers
                     GroupId = claimGroup.GroupId,
                     GroupName = claimGroup.GroupName,
                     GroupClaimsCheckboxes = claimGroup.Claims
-                        .Select(c => new SelectListItem() {
+                        .Select(c => new SelectListItem()
+                        {
                             Value = String.Format("{0}#{1}", claimGroup.GroupId, c),
                             Text = c,
                             Selected = assignedClaims.Any(ac => ac.Type == claimGroup.GroupId.ToString() && ac.Value == c)
@@ -84,35 +85,51 @@ namespace ClaimsAuth.Controllers
         }
 
 
-        //[HttpPost]
-        //public async Task<ActionResult> EditClaims(RoleClaimsViewModel viewModel)
-        //{
-        //    var role = await roleManager.FindByIdAsync(viewModel.RoleId);
+        [HttpPost]
+        public async Task<ActionResult> EditClaims(RoleClaimsViewModel viewModel)
+        {
+            var role = await roleManager.FindByIdAsync(viewModel.RoleId);
+            var roleClaims = await roleManager.GetClaimsAsync(role.Name);
 
-        //    var possibleClaims = claimedActionsProvider.GetControlledClaims();
 
-        //    var roleClaims = await roleManager.GetClaimsAsync(role.Name);
+            // this is ugly. Deletes all the claims and adds them back in.
+            // can be done in a better fashion
+            foreach (var removedClaim in roleClaims)
+            {
+                await roleManager.RemoveClaimAsync(role.Id, removedClaim);
+            }
 
-        //    var submittedClaims = viewModel.SelectedClaims.ToList();
+            var submittedClaims = viewModel
+                .SelectedClaims
+                .Select(s =>
+                    {
+                        var tokens = s.Split('#');
+                        if (tokens.Count() != 2)
+                        {
+                            throw new Exception(String.Format("Claim {0} can't be processed because it is in incorrect format", s));
+                        }
+                        return new Claim(tokens[0], tokens[1]);
+                    }).ToList();
+            
 
-        //    foreach (var submittedClaim in submittedClaims)
-        //    {
-        //        var hasClaim = roleClaims.Any(c => c.Value == submittedClaim && c.Type == submittedClaim);
-        //        if (!hasClaim)
-        //        {
-        //            await roleManager.AddClaimAsync(role.Id, new Claim(submittedClaim, submittedClaim));
-        //        }
-        //    }
+            roleClaims = await roleManager.GetClaimsAsync(role.Name);
 
-        //    foreach (var removedClaim in possibleClaims.Except(submittedClaims))
-        //    {
-        //        await roleManager.RemoveClaimAsync(role.Id, new Claim(removedClaim, removedClaim));
-        //    }
+            foreach (var submittedClaim in submittedClaims)
+            {
+                var hasClaim = roleClaims.Any(c => c.Value == submittedClaim.Value && c.Type == submittedClaim.Type);
+                if (!hasClaim)
+                {
+                    await roleManager.AddClaimAsync(role.Id, submittedClaim);
+                }
+            }
 
-        //    roleClaims = await roleManager.GetClaimsAsync(role.Name);
+            roleClaims = await roleManager.GetClaimsAsync(role.Name);
 
-        //    return RedirectToAction("Index");
-        //}
+            var cacheKey = ApplicationRole.GetCacheKey(role.Name);
+            System.Web.HttpContext.Current.Cache.Remove(cacheKey);
+
+            return RedirectToAction("Index");
+        }
     }
 
 

@@ -1,5 +1,7 @@
 ﻿using System.Web;
 using System.Web.Mvc;
+using ClaimsAuth.Infrastructure.Identity;
+
 
 namespace ClaimsAuth
 {
@@ -8,6 +10,7 @@ namespace ClaimsAuth
         public static void RegisterGlobalFilters(GlobalFilterCollection filters)
         {
             filters.Add(new HandleErrorAttribute());
+            filters.Add(new ClaimsAuthorisationFilter());
         }
     }
 }

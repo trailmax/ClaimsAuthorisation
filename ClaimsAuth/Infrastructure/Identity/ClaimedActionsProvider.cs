@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
+using System.Security.Claims;
 using System.Web.Mvc;
 using ClaimsAuth.Infrastructure.Helpers;
 
@@ -73,6 +74,11 @@ namespace ClaimsAuth.Infrastructure.Identity
 
         public Type ControllerType { get; set; }
 
-        public List<String> Claims { get; set; } 
+        public List<String> Claims { get; set; }
+
+        public List<Claim> GetAllClaims()
+        {
+            return Claims.Select(c => new Claim(GroupId.ToString(), c)).ToList();
+        }
     }
 }
