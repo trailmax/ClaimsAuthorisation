@@ -10,7 +10,7 @@ namespace ClaimsAuth.Infrastructure.Identity
 {
     public class ClaimedActionsProvider
     {
-        public List<ClaimsGroup> GetControlledClaims()
+        public List<ClaimsGroup> GetClaimGroups()
         {
             var claimedGroups = Assembly.GetAssembly(typeof(MvcApplication))
                 .GetTypes()

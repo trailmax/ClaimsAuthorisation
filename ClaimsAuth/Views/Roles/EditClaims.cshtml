@@ -12,7 +12,23 @@
 @using (Html.BeginForm())
 {
     @Html.HiddenFor(m => m.RoleId)
-    @Html.CheckBoxListFor(m => m.SelectedClaims, Model.RoleClaims)
+    
+    foreach (var claimGroup in Model.ClaimGroups)
+    {
+        <h2>@claimGroup.GroupName</h2>
+        @Html.CheckBoxListFor(m => m.SelectedClaims, claimGroup.GroupClaimsCheckboxes, new { @class = "list-inline claims-list",  })
+    }
+    
     
     <input type="submit" value="Update"/>
 }
+
+<style>
+    .claims-list li{
+        padding-right: 10px;
+    }
+
+    .claims-list li input{
+        margin-right: 3px;
+    }
+</style>

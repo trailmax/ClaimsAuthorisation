@@ -20,7 +20,7 @@ namespace ClaimsAuth.Controllers
         {
             var viewModel = new ClaimsIndexViewModel()
             {
-                Claims = claimedActionsProvider.GetControlledClaims(),
+                Claims = claimedActionsProvider.GetClaimGroups(),
             };
 
             return View(viewModel);

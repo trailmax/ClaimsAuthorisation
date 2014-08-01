@@ -49,37 +49,39 @@ namespace ClaimsAuth.Controllers
         }
 
 
-        //TODO FIX
-        //public async Task<ActionResult> EditClaims(string id)
-        //{
-        //    var role = await roleManager.FindByIdAsync(id);
+        public async Task<ActionResult> EditClaims(string id)
+        {
+            var role = await roleManager.FindByIdAsync(id);
 
-        //    var possibleClaims = claimedActionsProvider.GetControlledClaims();
+            var claimGroups = claimedActionsProvider.GetClaimGroups();
 
-        //    var assignedClaims = await roleManager.GetClaimsAsync(role.Name);
+            var assignedClaims = await roleManager.GetClaimsAsync(role.Name);
 
-        //    foreach (var possibleClaim in possibleClaims)
-        //    {
-                
-        //    }
+            var viewModel = new RoleClaimsViewModel()
+            {
+                RoleId = role.Id,
+                RoleName = role.Name,
+            };
 
-        //    //var roleClaims = possibleClaims.Select(pc => new SelectListItem()
-        //    //{
-        //    //    Value = pc.GroupId.ToString(),
-        //    //    Text = ,
-        //    //    Selected = assignedClaims.Select(c => c.Type).Contains(pc),
-        //    //}).ToList();
+            foreach (var claimGroup in claimGroups)
+            {
+                var claimGroupModel = new RoleClaimsViewModel.ClaimGroup()
+                {
+                    GroupId = claimGroup.GroupId,
+                    GroupName = claimGroup.GroupName,
+                    GroupClaimsCheckboxes = claimGroup.Claims
+                        .Select(c => new SelectListItem() {
+                            Value = String.Format("{0}#{1}", claimGroup.GroupId, c),
+                            Text = c,
+                            Selected = assignedClaims.Any(ac => ac.Type == claimGroup.GroupId.ToString() && ac.Value == c)
+                        }).ToList()
+                };
+                viewModel.ClaimGroups.Add(claimGroupModel);
+            }
 
 
-        //    //var viewModel = new RoleClaimsViewModel()
-        //    //{
-        //    //    RoleId = role.Id,
-        //    //    RoleName = role.Name,
-        //    //    RoleClaims = roleClaims,
-        //    //};
-
-        //    return View(viewModel);
-        //}
+            return View(viewModel);
+        }
 
 
         //[HttpPost]
@@ -125,7 +127,7 @@ namespace ClaimsAuth.Controllers
     {
         public RoleClaimsViewModel()
         {
-            RoleClaims = new List<SelectListItem>();
+            ClaimGroups = new List<ClaimGroup>();
 
             SelectedClaims = new List<String>();
         }
@@ -134,8 +136,22 @@ namespace ClaimsAuth.Controllers
 
         public String RoleName { get; set; }
 
-        public List<SelectListItem> RoleClaims { get; set; }
+        public List<ClaimGroup> ClaimGroups { get; set; }
 
         public IEnumerable<String> SelectedClaims { get; set; }
+
+
+        public class ClaimGroup
+        {
+            public ClaimGroup()
+            {
+                GroupClaimsCheckboxes = new List<SelectListItem>();
+            }
+            public String GroupName { get; set; }
+
+            public int GroupId { get; set; }
+
+            public List<SelectListItem> GroupClaimsCheckboxes { get; set; }
+        }
     }
 }

@@ -26,23 +26,26 @@ namespace ClaimsAuth.Infrastructure.Helpers
         /// </summary>
         public static MvcHtmlString CheckBoxList(this HtmlHelper htmlHelper, string listName, List<SelectListItem> items, object htmlAttributes = null)
         {
-            var container = new TagBuilder("div");
+            var container = new TagBuilder("ul");
+            container.MergeAttributes(new RouteValueDictionary(htmlAttributes), true);
             foreach (var item in items)
             {
+                var li = new TagBuilder("li");
                 var label = new TagBuilder("label");
-                label.MergeAttribute("class", "checkbox"); // default class
-                label.MergeAttributes(new RouteValueDictionary(htmlAttributes), true);
 
                 var cb = new TagBuilder("input");
                 cb.MergeAttribute("type", "checkbox");
                 cb.MergeAttribute("name", listName);
                 cb.MergeAttribute("value", item.Value ?? item.Text);
                 if (item.Selected)
+                {
                     cb.MergeAttribute("checked", "checked");
+                }
 
                 label.InnerHtml = cb.ToString(TagRenderMode.SelfClosing) + item.Text;
+                li.InnerHtml = label.ToString();
 
-                container.InnerHtml += label.ToString();
+                container.InnerHtml += li.ToString();
             }
 
             return new MvcHtmlString(container.ToString());

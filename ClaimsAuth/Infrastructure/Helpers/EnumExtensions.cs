@@ -43,7 +43,7 @@ namespace ClaimsAuth.Infrastructure.Helpers
             }
 
             // if none of the above attributes are present, just put spaces where needed on the name
-            return value.ToString().ToSeparatedWords().LowerCasePrepositions();
+            return value.ToString().ToSeparatedWords();
         }
     }
 }

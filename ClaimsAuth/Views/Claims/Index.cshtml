@@ -8,8 +8,8 @@
 
 @foreach (var claim in Model.Claims)
 {
-    <h2>@claim.GroupName (@claim.GroupId)</h2>
-    <ul class="">
+    <h2>@claim.GroupName (id = @claim.GroupId)</h2>
+    <ul class="list-inline">
         @foreach (var actionClaim in @claim.Claims)
         {
             <li>@actionClaim</li>
