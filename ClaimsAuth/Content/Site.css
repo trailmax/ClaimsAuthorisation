@@ -15,3 +15,11 @@ select,
 textarea {
     max-width: 280px;
 }
+
+.claims-list li {
+    padding-right: 10px;
+}
+
+    .claims-list li input {
+        margin-right: 3px;
+    }

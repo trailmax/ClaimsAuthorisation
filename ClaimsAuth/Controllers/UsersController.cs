@@ -36,71 +36,45 @@ namespace ClaimsAuth.Controllers
             return View(viewModel);
         }
 
-        //TODO FIX
-        //public async Task<ActionResult> EditClaims(String id)
-        //{
-        //    var user = await userManager.FindByIdAsync(id);
+        public async Task<ActionResult> ViewClaims(String id)
+        {
+            var user = await userManager.FindByIdAsync(id);
 
-        //    var possibleClaims = claimedActionsProvider.GetControlledClaims();
+            var userRoles = await userManager.GetRolesAsync(id);
+            var userclaims = new List<Claim>();
+            foreach (var role in userRoles)
+            {
+                var roleClaims = await roleManager.GetClaimsAsync(role);
 
-        //    var assignedClaims = await userManager.GetClaimsAsync(user.Id);
+                userclaims.AddRange(roleClaims);
+            }
 
-        //    var userClaims = possibleClaims.Select(pc => new SelectListItem()
-        //    {
-        //        Value = pc,
-        //        Text = pc,
-        //        Selected = assignedClaims.Select(c => c.Type).Contains(pc),
-        //    }).ToList();
+            var claimGroups = claimedActionsProvider.GetClaimGroups();
 
-        //    var viewModel = new UserClaimsViewModel()
-        //    {
-        //        Username = user.UserName,
-        //        UserId = user.Id,
-        //        UserClaims = userClaims,
-        //    };
+            var viewModel = new UserClaimsViewModel()
+            {
+                UserName = user.UserName,
+            };
 
-        //    return View(viewModel);
-        //}
+            foreach (var claimGroup in claimGroups)
+            {
+                var claimGroupModel = new UserClaimsViewModel.ClaimGroup()
+                {
+                    GroupId = claimGroup.GroupId,
+                    GroupName = claimGroup.GroupName,
+                    GroupClaimsCheckboxes = claimGroup.Claims
+                        .Select(c => new SelectListItem()
+                        {
+                            Value = String.Format("{0}#{1}", claimGroup.GroupId, c),
+                            Text = c,
+                            Selected = userclaims.Any(ac => ac.Type == claimGroup.GroupId.ToString() && ac.Value == c)
+                        }).ToList()
+                };
+                viewModel.ClaimGroups.Add(claimGroupModel);
+            }
 
-
-        //[HttpPost]
-        //public async Task<ActionResult> EditClaims(UserClaimsViewModel viewModel)
-        //{
-        //    var user = await userManager.FindByIdAsync(viewModel.UserId);
-
-        //    var possibleClaims = claimedActionsProvider.GetControlledClaims();
-
-        //    var userClaims = await userManager.GetClaimsAsync(user.Id);
-
-        //    var submittedClaims = viewModel.SelectedClaims.ToList();
-
-        //    var shouldUpdateSecurityStamp = false;
-
-        //    foreach (var submittedClaim in submittedClaims)
-        //    {
-        //        var hasClaim = userClaims.Any(c => c.Value == submittedClaim && c.Type == submittedClaim);
-        //        if (!hasClaim)
-        //        {
-        //            await userManager.AddClaimAsync(user.Id, new Claim(submittedClaim, submittedClaim));
-        //            shouldUpdateSecurityStamp = true;
-        //        }
-        //    }
-
-        //    foreach (var removedClaim in possibleClaims.Except(submittedClaims))
-        //    {
-        //        await userManager.RemoveClaimAsync(user.Id, new Claim(removedClaim, removedClaim));
-        //        shouldUpdateSecurityStamp = true;
-        //    }
-
-        //    if (shouldUpdateSecurityStamp)
-        //    {
-        //        await userManager.UpdateSecurityStampAsync(user.Id);
-        //    }
-
-        //    userClaims = await userManager.GetClaimsAsync(user.Id);
-
-        //    return RedirectToAction("Index");
-        //}
+            return View(viewModel);
+        }
 
 
         public async Task<ActionResult> EditRoles(string userId)
@@ -174,15 +148,32 @@ namespace ClaimsAuth.Controllers
     {
         public UserClaimsViewModel()
         {
-            UserClaims = new List<SelectListItem>();
+            ClaimGroups = new List<ClaimGroup>();
+
             SelectedClaims = new List<String>();
         }
 
-        public String UserId { get; set; }
-        public String Username { get; set; }
-        public List<SelectListItem> UserClaims { get; set; }
+        public String UserName { get; set; }
+
+        public List<ClaimGroup> ClaimGroups { get; set; }
+
         public IEnumerable<String> SelectedClaims { get; set; }
+
+
+        public class ClaimGroup
+        {
+            public ClaimGroup()
+            {
+                GroupClaimsCheckboxes = new List<SelectListItem>();
+            }
+            public String GroupName { get; set; }
+
+            public int GroupId { get; set; }
+
+            public List<SelectListItem> GroupClaimsCheckboxes { get; set; }
+        }
     }
+
 
 
     public class UserRolesViewModel

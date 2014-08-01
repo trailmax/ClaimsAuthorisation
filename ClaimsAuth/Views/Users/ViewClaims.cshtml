@@ -1,0 +1,16 @@
+﻿@using ClaimsAuth.Infrastructure.Helpers
+@model ClaimsAuth.Controllers.UserClaimsViewModel
+
+@{
+    ViewBag.Title = "Update User Claims";
+}
+
+<h2>Update User Claims</h2>
+
+<p>Username: @Model.UserName</p>
+
+@foreach (var claimGroup in Model.ClaimGroups)
+{
+    <h2>@claimGroup.GroupName</h2>
+    @Html.CheckBoxListFor(m => m.SelectedClaims, claimGroup.GroupClaimsCheckboxes, new { @class = "list-inline claims-list", })
+}
