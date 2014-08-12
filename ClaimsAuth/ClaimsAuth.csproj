@@ -166,6 +166,7 @@
     <Compile Include="Areas\Product\Controllers\ProductController.cs" />
     <Compile Include="Areas\Product\Controllers\ProductTypeController.cs" />
     <Compile Include="Areas\Product\ProductAreaRegistration.cs" />
+    <Compile Include="Controllers\AuthenticatedController.cs" />
     <Compile Include="Controllers\ErrorsController.cs" />
     <Compile Include="Controllers\ProfilerController.cs" />
     <Compile Include="Controllers\SecretController.cs" />
@@ -297,6 +298,7 @@
     <Content Include="Views\Profiler\Index.cshtml" />
     <Content Include="Views\Profiler\AddClaims.cshtml" />
     <Content Include="Views\Profiler\AddRandomClaims.cshtml" />
+    <Content Include="Views\Authenticated\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Areas\Product\Models\" />

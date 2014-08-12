@@ -63,8 +63,6 @@ namespace ClaimsAuth
                 CookieName = "jumpingjacks",
                 CookieHttpOnly = true,
             });
-            
-            app.UseExternalSignInCookie(DefaultAuthenticationTypes.ExternalCookie);
         }
     }
 }

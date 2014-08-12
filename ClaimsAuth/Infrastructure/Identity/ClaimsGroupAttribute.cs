@@ -38,7 +38,8 @@ namespace ClaimsAuth.Infrastructure.Identity
         View,
         Create,
         Edit,
-        Delete
+        Delete,
+        HolidayRequest
     }
 
 

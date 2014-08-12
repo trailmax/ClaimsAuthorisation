@@ -15,6 +15,7 @@ namespace ClaimsAuth.Areas.Product.Controllers
         }
 
 
+        [Authorize(Roles = "Confidential")]
         [ClaimsAction(ClaimsActions.Create)]
         public ActionResult Create()
         {

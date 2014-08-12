@@ -1,5 +1,6 @@
 ﻿using System.Security.Claims;
 using System.Threading.Tasks;
+using System.Web;
 using ClaimsAuth.Models;
 using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.EntityFramework;
@@ -47,6 +48,8 @@ namespace ClaimsAuth.Infrastructure.Identity
 
         public async Task SignInAsync(IAuthenticationManager authenticationManager, ApplicationUser applicationUser, bool isPersistent)
         {
+            var beforeauth = HttpContext.Current.User.Identity;
+
             authenticationManager.SignOut(
                 DefaultAuthenticationTypes.ExternalCookie,
                 DefaultAuthenticationTypes.ApplicationCookie,
@@ -58,6 +61,8 @@ namespace ClaimsAuth.Infrastructure.Identity
             identity.AddClaim(new Claim(ClaimTypes.Email, applicationUser.Email));
 
             authenticationManager.SignIn(new AuthenticationProperties() { IsPersistent = isPersistent }, identity);
+
+            var afterAuth = HttpContext.Current.User.Identity;
         }
 
 
