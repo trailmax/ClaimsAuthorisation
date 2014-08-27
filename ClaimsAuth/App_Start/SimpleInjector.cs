@@ -1,4 +1,5 @@
 ﻿using System.Reflection;
+using System.Web;
 using System.Web.Mvc;
 using ClaimsAuth.Infrastructure;
 using ClaimsAuth.Infrastructure.Identity;
@@ -14,20 +15,22 @@ namespace ClaimsAuth
         {
             var container = new Container();
 
-            container.Register<MyDbContext>(Lifestyle.Transient);
+            container.RegisterPerWebRequest<MyDbContext>();
 
-            container.Register<UserManager>(Lifestyle.Transient);
+            container.RegisterPerWebRequest<UserManager>();
 
-            container.Register<RoleManager>(Lifestyle.Transient);
+            container.RegisterPerWebRequest<RoleManager>();
 
-            container.Register<ClaimedActionsProvider>(Lifestyle.Transient);
+            container.RegisterPerWebRequest<ClaimedActionsProvider>();
+
+            container.Register<SignInManager>();
+
+            container.RegisterPerWebRequest(() => HttpContext.Current.GetOwinContext().Authentication);
 
             container.RegisterMvcControllers(Assembly.GetExecutingAssembly());
 
-            container.RegisterMvcIntegratedFilterProvider();
 
-            // 3. Optionally verify the container's configuration.
-            container.Verify();
+            container.RegisterMvcIntegratedFilterProvider();
 
             DependencyResolver.SetResolver(new SimpleInjectorDependencyResolver(container));
         }

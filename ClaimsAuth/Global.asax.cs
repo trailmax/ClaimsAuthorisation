@@ -8,12 +8,12 @@ namespace ClaimsAuth
     {
         protected void Application_Start()
         {
-            SimpleInjector.Configure();
-
             AreaRegistration.RegisterAllAreas();
             FilterConfig.RegisterGlobalFilters(GlobalFilters.Filters);
             RouteConfig.RegisterRoutes(RouteTable.Routes);
             BundleConfig.RegisterBundles(BundleTable.Bundles);
+
+            SimpleInjector.Configure();
         }
     }
 }

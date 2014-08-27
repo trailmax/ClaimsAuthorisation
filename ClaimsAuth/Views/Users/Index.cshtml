@@ -10,7 +10,11 @@
 <table class="table">
     <thead>
         <tr>
+            <td></td>
             <td>UserName</td>
+            <td>Is Lockout Enabled</td>
+            <td>Access Failed Count</td>
+            <td>Lockout End Date Utc</td>
         </tr>
     </thead>
     <tbody>
@@ -22,6 +26,9 @@
                     @Html.ActionLink("View Claims", "ViewClaims", new { id = user.Id }, new { @class = "btn btn-primary btn-xs" })
                 </td>
                 <td>@user.UserName</td>
+                <td>@user.LockoutEnabled</td>
+                <td>@user.AccessFailedCount</td>
+                <td>@user.LockoutEndDateUtc</td>
             </tr>
         }
     </tbody>

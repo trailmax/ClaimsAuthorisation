@@ -1,6 +1,6 @@
-﻿using System.Security.Claims;
+﻿using System;
+using System.Security.Claims;
 using System.Threading.Tasks;
-using System.Web;
 using ClaimsAuth.Models;
 using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.EntityFramework;
@@ -11,7 +11,7 @@ namespace ClaimsAuth.Infrastructure.Identity
 {
     public class UserManager : UserManager<ApplicationUser>
     {
-        public UserManager(MyDbContext dbContext, RoleManager roleManager)
+        public UserManager(MyDbContext dbContext)
             : base(new UserStore<ApplicationUser>(dbContext))
         {
             // Configure validation logic for usernames
@@ -44,6 +44,11 @@ namespace ClaimsAuth.Infrastructure.Identity
             this.SmsService = new SmsService();
             this.UserTokenProvider = new EmailTokenProvider<ApplicationUser>();
             this.ClaimsIdentityFactory = new MyClaimsIdentityFactory();
+
+            // enable lockout on users
+            this.DefaultAccountLockoutTimeSpan = TimeSpan.FromMinutes(1);
+            this.MaxFailedAccessAttemptsBeforeLockout = 6;
+            this.UserLockoutEnabledByDefault = true;
         }
 
 
@@ -72,32 +77,32 @@ namespace ClaimsAuth.Infrastructure.Identity
         }
     }
 
-    //public class MyClaimsIdentityFactory : ClaimsIdentityFactory<ApplicationUser, string>
-    //{
-    //    private readonly RoleManager roleManager;
+    public class MyFirstClaimsIdentityFactory : ClaimsIdentityFactory<ApplicationUser, string>
+    {
+        private readonly RoleManager roleManager;
 
 
-    //    public MyClaimsIdentityFactory(RoleManager roleManager)
-    //    {
-    //        this.roleManager = roleManager;
-    //    }
+        public MyFirstClaimsIdentityFactory(RoleManager roleManager)
+        {
+            this.roleManager = roleManager;
+        }
 
 
-    //    public override async Task<ClaimsIdentity> CreateAsync(UserManager<ApplicationUser, string> userManager, ApplicationUser user, string authenticationType)
-    //    {
-    //        var claimsIdentity = await base.CreateAsync(userManager, user, authenticationType);
+        public override async Task<ClaimsIdentity> CreateAsync(UserManager<ApplicationUser, string> userManager, ApplicationUser user, string authenticationType)
+        {
+            var claimsIdentity = await base.CreateAsync(userManager, user, authenticationType);
 
-    //        var userRoles = await userManager.GetRolesAsync(user.Id);
-    //        foreach (var role in userRoles)
-    //        {
-    //            var roleClaims = await roleManager.GetClaimsAsync(role);
+            var userRoles = await userManager.GetRolesAsync(user.Id);
+            foreach (var role in userRoles)
+            {
+                var roleClaims = await roleManager.GetClaimsAsync(role);
 
-    //            claimsIdentity.AddClaims(roleClaims);
-    //        }
+                claimsIdentity.AddClaims(roleClaims);
+            }
 
-    //        return claimsIdentity;
-    //    }
-    //}
+            return claimsIdentity;
+        }
+    }
 
 
     public class MyClaimsIdentityFactory : ClaimsIdentityFactory<ApplicationUser, string>

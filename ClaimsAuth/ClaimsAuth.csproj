@@ -179,6 +179,7 @@
     <Compile Include="Infrastructure\Helpers\StringExtensions.cs" />
     <Compile Include="Infrastructure\Identity\ClaimsAuthorisationFilter.cs" />
     <Compile Include="Infrastructure\Identity\ClaimsGroupAttribute.cs" />
+    <Compile Include="Infrastructure\Identity\SignInManager.cs" />
     <Compile Include="Infrastructure\Identity\UserManager.cs" />
     <Compile Include="App_Start\AutofacConfig.cs" />
     <Compile Include="App_Start\BundleConfig.cs" />
@@ -303,6 +304,7 @@
     <Content Include="Views\Profiler\AddClaims.cshtml" />
     <Content Include="Views\Profiler\AddRandomClaims.cshtml" />
     <Content Include="Views\Authenticated\Index.cshtml" />
+    <Content Include="Views\Account\LoginWithManager.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Areas\Product\Models\" />

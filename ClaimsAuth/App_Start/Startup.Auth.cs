@@ -25,9 +25,6 @@ namespace ClaimsAuth
                 SecurityStampValidator.OnValidateIdentity<UserManager, ApplicationUser>(
                     TimeSpan.FromMinutes(0), (manager, user) => manager.GenerateUserIdentityAsync(user));
 
-                //IOwinRequest request = context.Request;
-                //Trace.WriteLine(String.Format("Validating Identity: {0}", request.Path));
-
                 var userId = context.Identity.GetUserId();
                 if (userId == null)
                 {

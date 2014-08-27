@@ -3,6 +3,7 @@ using System.Web;
 using System.Web.Mvc;
 using ClaimsAuth.Infrastructure.Identity;
 using Microsoft.AspNet.Identity;
+using Microsoft.AspNet.Identity.Owin;
 using Microsoft.Owin.Security;
 using ClaimsAuth.Models;
 
@@ -11,11 +12,13 @@ namespace ClaimsAuth.Controllers
     [Authorize]
     public class AccountController : Controller
     {
-        private UserManager userManager;
+        private readonly UserManager userManager;
+        private readonly SignInManager signInManager;
 
-        public AccountController(UserManager userManager)
+        public AccountController(UserManager userManager, SignInManager signInManager)
         {
             this.userManager = userManager;
+            this.signInManager = signInManager;
         }
 
 
@@ -42,12 +45,56 @@ namespace ClaimsAuth.Controllers
                 else
                 {
                     ModelState.AddModelError("", "Invalid username or password.");
+
+
                 }
             }
 
             // If we got this far, something failed, redisplay form
             return View(model);
         }
+
+
+        [AllowAnonymous]
+        public ActionResult LoginWithManager(string returnUrl)
+        {
+            ViewBag.ReturnUrl = returnUrl;
+            return View();
+        }
+
+
+        [HttpPost]
+        [AllowAnonymous]
+        [ValidateAntiForgeryToken]
+        public async Task<ActionResult> LoginWithManager(LoginViewModel model, string returnUrl)
+        {
+            if (!ModelState.IsValid)
+            {
+                return View("Login", model);
+            }
+
+
+            var signinStatus = await signInManager.PasswordSignInAsync(model.Email, model.Password, model.RememberMe, true);
+
+            if (signinStatus == SignInStatus.Success)
+            {
+                return RedirectToLocal(returnUrl);
+            }
+
+            if (signinStatus == SignInStatus.LockedOut)
+            {
+                ModelState.AddModelError("", "User is locked out");
+            }
+
+            if (signinStatus == SignInStatus.Failure)
+            {
+                ModelState.AddModelError("", "Failed to login: Invalid username or password");
+            }
+
+            // If we got this far, something failed, redisplay form
+            return View(model);
+        }
+
 
         [AllowAnonymous]
         public ActionResult Register()
@@ -89,7 +136,7 @@ namespace ClaimsAuth.Controllers
         [AllowAnonymous]
         public async Task<ActionResult> ConfirmEmail(string userId, string code)
         {
-            if (userId == null || code == null) 
+            if (userId == null || code == null)
             {
                 return View("Error");
             }
@@ -143,11 +190,11 @@ namespace ClaimsAuth.Controllers
         {
             return View();
         }
-	
+
         [AllowAnonymous]
         public ActionResult ResetPassword(string code)
         {
-            if (code == null) 
+            if (code == null)
             {
                 return View("Error");
             }
@@ -359,13 +406,13 @@ namespace ClaimsAuth.Controllers
                     if (result.Succeeded)
                     {
                         await userManager.SignInAsync(AuthenticationManager, user, isPersistent: false);
-                        
+
                         // For more information on how to enable account confirmation and password reset please visit http://go.microsoft.com/fwlink/?LinkID=320771
                         // Send an email with this link
                         // string code = await UserManager.GenerateEmailConfirmationTokenAsync(user.Id);
                         // var callbackUrl = Url.Action("ConfirmEmail", "Account", new { userId = user.Id, code = code }, protocol: Request.Url.Scheme);
                         // SendEmail(user.Email, callbackUrl, "Confirm your account", "Please confirm your account by clicking this link");
-                        
+
                         return RedirectToLocal(returnUrl);
                     }
                 }
@@ -400,15 +447,6 @@ namespace ClaimsAuth.Controllers
             return (ActionResult)PartialView("_RemoveAccountPartial", linkedAccounts);
         }
 
-        protected override void Dispose(bool disposing)
-        {
-            if (disposing && userManager != null)
-            {
-                userManager.Dispose();
-                userManager = null;
-            }
-            base.Dispose(disposing);
-        }
 
         #region Helpers
         // Used for XSRF protection when adding external logins
@@ -464,7 +502,8 @@ namespace ClaimsAuth.Controllers
 
         private class ChallengeResult : HttpUnauthorizedResult
         {
-            public ChallengeResult(string provider, string redirectUri) : this(provider, redirectUri, null)
+            public ChallengeResult(string provider, string redirectUri)
+                : this(provider, redirectUri, null)
             {
             }
 
