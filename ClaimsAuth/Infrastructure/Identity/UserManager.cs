@@ -43,6 +43,7 @@ namespace ClaimsAuth.Infrastructure.Identity
             this.EmailService = new EmailService();
             this.SmsService = new SmsService();
             this.UserTokenProvider = new EmailTokenProvider<ApplicationUser>();
+            this.ClaimsIdentityFactory = new MyClaimsIdentityFactory();
         }
 
 
@@ -97,4 +98,18 @@ namespace ClaimsAuth.Infrastructure.Identity
     //        return claimsIdentity;
     //    }
     //}
+
+
+    public class MyClaimsIdentityFactory : ClaimsIdentityFactory<ApplicationUser, string>
+    {
+        public override async Task<ClaimsIdentity> CreateAsync(UserManager<ApplicationUser, string> userManager, ApplicationUser user, string authenticationType)
+        {
+            var claimsIdentity = await base.CreateAsync(userManager, user, authenticationType);
+
+            claimsIdentity.AddClaim(new Claim("MyApplication:GroupId", "42"));
+
+            return claimsIdentity;
+        }
+    }
+
 }
