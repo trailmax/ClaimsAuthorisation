@@ -135,6 +135,14 @@ namespace ClaimsAuth.Controllers
 
             return RedirectToAction("Index");
         }
+
+
+        public async Task<ActionResult> UpdateSecurityStamp(String userId)
+        {
+            await userManager.UpdateSecurityStampAsync(userId);
+
+            return RedirectToAction("Index");
+        }
     }
 
 

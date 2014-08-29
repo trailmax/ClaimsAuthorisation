@@ -15,6 +15,7 @@
             <td>Is Lockout Enabled</td>
             <td>Access Failed Count</td>
             <td>Lockout End Date Utc</td>
+            <td>SecurityStamp</td>
         </tr>
     </thead>
     <tbody>
@@ -24,11 +25,13 @@
                 <td>
                     @Html.ActionLink("Edit Roles", "EditRoles", new { userId = user.Id }, new { @class = "btn btn-primary btn-xs" })
                     @Html.ActionLink("View Claims", "ViewClaims", new { id = user.Id }, new { @class = "btn btn-primary btn-xs" })
+                    @Html.ActionLink("Change Stamp", "UpdateSecurityStamp", new { userId = user.Id }, new { @class = "btn btn-primary btn-xs", title = "Update Security Stamp" })
                 </td>
                 <td>@user.UserName</td>
                 <td>@user.LockoutEnabled</td>
                 <td>@user.AccessFailedCount</td>
                 <td>@user.LockoutEndDateUtc</td>
+                <td>@user.SecurityStamp</td>
             </tr>
         }
     </tbody>

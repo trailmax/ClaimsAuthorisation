@@ -1,7 +1,9 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using System.Security.Claims;
+using System.Threading.Tasks;
 using System.Web.Mvc;
+using ClaimsAuth.Infrastructure;
 using ClaimsAuth.Infrastructure.Identity;
 using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.Owin;
@@ -19,14 +21,21 @@ namespace ClaimsAuth
         // For more information on configuring authentication, please visit http://go.microsoft.com/fwlink/?LinkId=301864
         public void ConfigureAuth(IAppBuilder app)
         {
+            app.CreatePerOwinContext(() => DependencyResolver.Current.GetService<UserManager>());
+
             var cookieAuthenticationProvider = new CookieAuthenticationProvider();
             cookieAuthenticationProvider.OnValidateIdentity = async context =>
             {
-                SecurityStampValidator.OnValidateIdentity<UserManager, ApplicationUser>(
-                    TimeSpan.FromMinutes(0), (manager, user) => manager.GenerateUserIdentityAsync(user));
+                var cookieValidatorFunc = SecurityStampValidator.OnValidateIdentity<UserManager, ApplicationUser>(
+                    TimeSpan.FromMinutes(0),
+                    (manager, user) =>
+                    {
+                        var identity = manager.GenerateUserIdentityAsync(user);
+                        return identity;
+                    });
+                await cookieValidatorFunc.Invoke(context);
 
-                var userId = context.Identity.GetUserId();
-                if (userId == null)
+                if (context.Identity == null || !context.Identity.IsAuthenticated)
                 {
                     return;
                 }
@@ -50,12 +59,22 @@ namespace ClaimsAuth
                     }
                     context.Identity.AddClaims(cachedClaims);
                 }
-
             };
+
             app.UseCookieAuthentication(new CookieAuthenticationOptions
             {
                 AuthenticationType = DefaultAuthenticationTypes.ApplicationCookie,
                 LoginPath = new PathString("/Account/Login"),
+                //Provider = new CookieAuthenticationProvider()
+                //{
+                //    OnValidateIdentity = SecurityStampValidator.OnValidateIdentity<UserManager, ApplicationUser>(
+                //                TimeSpan.FromMinutes(0),
+                //                (manager, user) =>
+                //                {
+                //                    var identity = manager.GenerateUserIdentityAsync(user);
+                //                    return identity;
+                //                })
+                //},
                 Provider = cookieAuthenticationProvider,
                 CookieName = "jumpingjacks",
                 CookieHttpOnly = true,
