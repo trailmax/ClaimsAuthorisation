@@ -21,13 +21,34 @@ namespace ClaimsAuth
         // For more information on configuring authentication, please visit http://go.microsoft.com/fwlink/?LinkId=301864
         public void ConfigureAuth(IAppBuilder app)
         {
+            // need to add UserManager into owin, because this is used in cookie invalidation
             app.CreatePerOwinContext(() => DependencyResolver.Current.GetService<UserManager>());
 
+            app.UseCookieAuthentication(new CookieAuthenticationOptions
+            {
+                AuthenticationType = DefaultAuthenticationTypes.ApplicationCookie,
+                LoginPath = new PathString("/Account/Login"),
+                //Provider = GetStandardCookieAuthenticationProvider(),
+                Provider = GetMyCookieAuthenticationProvider(),
+                CookieName = "jumpingjacks",
+                CookieHttpOnly = true,
+            });
+        }
+
+
+
+        /// <summary>
+        /// Cookie auth provider that adds extra role claims on the identity
+        /// Role claims are kept in cache and added on the identity on every request
+        /// </summary>
+        /// <returns></returns>
+        private static CookieAuthenticationProvider GetMyCookieAuthenticationProvider()
+        {
             var cookieAuthenticationProvider = new CookieAuthenticationProvider();
             cookieAuthenticationProvider.OnValidateIdentity = async context =>
             {
                 var cookieValidatorFunc = SecurityStampValidator.OnValidateIdentity<UserManager, ApplicationUser>(
-                    TimeSpan.FromMinutes(0),
+                    TimeSpan.FromMinutes(10),
                     (manager, user) =>
                     {
                         var identity = manager.GenerateUserIdentityAsync(user);
@@ -42,10 +63,10 @@ namespace ClaimsAuth
 
                 // get list of roles on the user
                 var userRoles = context.Identity
-                    .Claims
-                    .Where(c => c.Type == ClaimTypes.Role)
-                    .Select(c => c.Value)
-                    .ToList();
+                                       .Claims
+                                       .Where(c => c.Type == ClaimTypes.Role)
+                                       .Select(c => c.Value)
+                                       .ToList();
 
                 foreach (var roleName in userRoles)
                 {
@@ -60,25 +81,27 @@ namespace ClaimsAuth
                     context.Identity.AddClaims(cachedClaims);
                 }
             };
+            return cookieAuthenticationProvider;
+        }
 
-            app.UseCookieAuthentication(new CookieAuthenticationOptions
+
+        /// <summary>
+        /// This is run of the mill cookie authentication provider
+        /// with invalidating the cookie on security stamp change every 10 minutes
+        /// </summary>
+        /// <returns></returns>
+        private static CookieAuthenticationProvider GetStandardCookieAuthenticationProvider()
+        {
+            return new CookieAuthenticationProvider()
             {
-                AuthenticationType = DefaultAuthenticationTypes.ApplicationCookie,
-                LoginPath = new PathString("/Account/Login"),
-                //Provider = new CookieAuthenticationProvider()
-                //{
-                //    OnValidateIdentity = SecurityStampValidator.OnValidateIdentity<UserManager, ApplicationUser>(
-                //                TimeSpan.FromMinutes(0),
-                //                (manager, user) =>
-                //                {
-                //                    var identity = manager.GenerateUserIdentityAsync(user);
-                //                    return identity;
-                //                })
-                //},
-                Provider = cookieAuthenticationProvider,
-                CookieName = "jumpingjacks",
-                CookieHttpOnly = true,
-            });
+                OnValidateIdentity = SecurityStampValidator.OnValidateIdentity<UserManager, ApplicationUser>(
+                    TimeSpan.FromMinutes(10),
+                    (manager, user) =>
+                    {
+                        var identity = manager.GenerateUserIdentityAsync(user);
+                        return identity;
+                    })
+            };
         }
     }
 }
