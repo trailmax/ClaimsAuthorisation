@@ -8,6 +8,7 @@ using ClaimsAuth.Infrastructure.Identity;
 using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.Owin;
 using Microsoft.Owin;
+using Microsoft.Owin.Security;
 using Microsoft.Owin.Security.Cookies;
 using Owin;
 using System;
@@ -103,5 +104,39 @@ namespace ClaimsAuth
                     })
             };
         }
+
+
+        //private static CookieAuthenticationProvider RoleUpdatingAuthenticationProvider()
+        //{
+        //    var cookieAuthenticationProvider = new CookieAuthenticationProvider();
+        //    cookieAuthenticationProvider.OnValidateIdentity = async context =>
+        //    {
+        //        // invalidate user cookie if user's security stamp have changed
+        //        var invalidateBySecirityStamp = SecurityStampValidator.OnValidateIdentity<ApplicationUserManager, ApplicationUser>(
+        //                validateInterval: TimeSpan.FromMinutes(30),
+        //                regenerateIdentity: (manager, user) => user.GenerateUserIdentityAsync(manager));
+        //        await invalidateBySecirityStamp.Invoke(context);
+
+
+        //        if (context.Identity == null || !context.Identity.IsAuthenticated)
+        //        {
+        //            return;
+        //        }
+
+        //        var userManager = context.OwinContext.GetUserManager<UserManager>();
+        //        var username = context.Identity.Name;
+        //        var updatedUser = await userManager.FindByNameAsync(username);
+
+        //        var newIdentity = updatedUser.GenerateUserIdentityAsync(manager);
+
+        //        // kill old cookie
+        //        context.OwinContext.Authentication.SignOut(context.Options.AuthenticationType);
+
+        //        // sign in again
+        //        var authenticationProperties = new AuthenticationProperties() { IsPersistent = context.Properties.IsPersistent };
+        //        context.OwinContext.Authentication.SignIn(authenticationProperties, newIdentity);
+        //    };
+        //    return cookieAuthenticationProvider;
+        //}
     }
 }
