@@ -3,7 +3,9 @@ using System.Web;
 using System.Web.Mvc;
 using ClaimsAuth.Infrastructure;
 using ClaimsAuth.Infrastructure.Identity;
+using Microsoft.Owin;
 using SimpleInjector;
+using SimpleInjector.Integration.Web;
 using SimpleInjector.Integration.Web.Mvc;
 
 
@@ -15,22 +17,30 @@ namespace ClaimsAuth
         {
             var container = new Container();
 
-            container.RegisterPerWebRequest<MyDbContext>();
+            container.Options.DefaultScopedLifestyle = new WebRequestLifestyle();
 
-            container.RegisterPerWebRequest<UserManager>();
+            container.Register<MyDbContext>(Lifestyle.Scoped);
 
-            container.RegisterPerWebRequest<RoleManager>();
+            container.Register<UserManager>(Lifestyle.Scoped);
 
-            container.RegisterPerWebRequest<ClaimedActionsProvider>();
+            container.Register<RoleManager>(Lifestyle.Scoped);
 
-            container.Register<SignInManager>();
+            container.Register<ClaimedActionsProvider>(Lifestyle.Scoped);
 
-            container.RegisterPerWebRequest(() => HttpContext.Current.GetOwinContext().Authentication);
+            container.Register<SignInManager>(Lifestyle.Scoped);
+
+            container.Register(() => 
+                container.IsVerifying 
+                    ? new OwinContext().Authentication 
+                    : HttpContext.Current.GetOwinContext().Authentication, 
+                Lifestyle.Scoped);
 
             container.RegisterMvcControllers(Assembly.GetExecutingAssembly());
 
 
             container.RegisterMvcIntegratedFilterProvider();
+
+            container.Verify();
 
             DependencyResolver.SetResolver(new SimpleInjectorDependencyResolver(container));
         }
